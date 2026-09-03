@@ -6,15 +6,9 @@
 
 ## 🎬 Platform Navigation Demo Video & Interactive Walkthrough
 
-> Live automated video showcase cycling through **all 7 platform navigation views** (Feed, My Network, Jobs, Messaging, Applications, Candidate Profile, and Recruiter Portal):
+> Live 7-step automated browser video recording cycling through **all 7 platform navigation routes** (Feed, My Network, Jobs, Messaging, Applications, Candidate Profile, and Recruiter Portal):
 
-<div align="center">
-  <video src="demo-navigation.mp4" controls autoplay loop muted playsinline width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
-    <source src="demo-navigation.mp4" type="video/mp4">
-    <source src="demo-navigation.webm" type="video/webm">
-    Your browser does not support the video tag.
-  </video>
-</div>
+![TalentFlow 7-Step Navigation Walkthrough](demo-navigation.webp)
 
 ---
 
