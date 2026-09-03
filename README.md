@@ -8,7 +8,12 @@
 
 > Live 7-step automated browser video recording cycling through **all 7 platform navigation routes** (Feed, My Network, Jobs, Messaging, Applications, Candidate Profile, and Recruiter Portal):
 
-![TalentFlow 7-Step Navigation Walkthrough](demo-navigation.webp)
+<div align="center">
+  <img src="demo-navigation.webp" alt="TalentFlow 7-Step Navigation Walkthrough Video" width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);" />
+  <p align="center" style="margin-top: 8px;">
+    🎥 <strong>Video File Link</strong>: <a href="demo-navigation.webp">Play / Open demo-navigation.webp</a>
+  </p>
+</div>
 
 ---
 
