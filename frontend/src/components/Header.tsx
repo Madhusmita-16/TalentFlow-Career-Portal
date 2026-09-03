@@ -296,16 +296,16 @@ export const Header: React.FC = () => {
             🛡️ Recruiter Portal
           </Link>
 
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-left px-3 py-2 rounded-md text-sm font-semibold text-red-400 hover:bg-slate-800"
-              >
-                Log Out
-              </button>
-            </>
+          {isAuthenticated ? (
+            <button
+              onClick={() => {
+                handleLogout();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 rounded-md text-sm font-semibold text-red-400 hover:bg-slate-800"
+            >
+              Log Out
+            </button>
           ) : (
             <div className="pt-2 flex flex-col space-y-2">
               <Link
@@ -320,7 +320,7 @@ export const Header: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-2 text-xs font-bold text-white bg-sky-600 rounded-md"
               >
-                Register
+                Create Account
               </Link>
             </div>
           )}
