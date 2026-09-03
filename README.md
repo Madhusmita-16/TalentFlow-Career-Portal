@@ -4,16 +4,30 @@
 
 ---
 
-## 🎬 Platform Navigation Demo Video & Interactive Walkthrough
+## 📸 Captured Results & Screenshots for All 7 Navigation Pages
 
-> Live 7-step automated browser video recording cycling through **all 7 platform navigation routes** (Feed, My Network, Jobs, Messaging, Applications, Candidate Profile, and Recruiter Portal):
+Below are the full visual results captured for every navigation page in **TalentFlow**:
 
-<div align="center">
-  <img src="demo-navigation.webp" alt="TalentFlow 7-Step Navigation Walkthrough Video" width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);" />
-  <p align="center" style="margin-top: 8px;">
-    🎥 <strong>Video File Link</strong>: <a href="demo-navigation.webp">Play / Open demo-navigation.webp</a>
-  </p>
-</div>
+### 1. 🌐 Community Feed (`/feed`)
+![1. Community Feed](screenshots/1_feed_page.png)
+
+### 2. 👥 My Network (`/network`)
+![2. My Network](screenshots/2_network_page.png)
+
+### 3. 💼 Jobs Board (`/jobs`)
+![3. Jobs Board](screenshots/3_jobs_page.png)
+
+### 4. 💬 Messaging Hub (`/messaging`)
+![4. Messaging Hub](screenshots/4_messaging_page.png)
+
+### 5. 📂 Applications Tracker (`/candidate/applications`)
+![5. Applications Tracker](screenshots/5_applications_page.png)
+
+### 6. 👤 Candidate Profile Showcase (`/candidate/profile`)
+![6. Candidate Profile Showcase](screenshots/6_profile_page.png)
+
+### 7. 🛡️ Recruiter Portal Dashboard (`/admin`)
+![7. Recruiter Portal Dashboard](screenshots/7_admin_page.png)
 
 ---
 
