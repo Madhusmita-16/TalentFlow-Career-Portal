@@ -1,58 +1,86 @@
-# 💼 TalentFlow — Enterprise Career & Job Application Portal
+# 💼 TalentFlow — AI-Powered Enterprise Career & Talent Portal
 
-> A production-quality, full-stack **enterprise recruitment platform** built with React + TypeScript + Tailwind CSS (frontend) and Java Spring Boot + Spring Security + MySQL (backend). Features JWT authentication, multi-step application forms, a real-time admin recruiter dashboard, candidate profile management, and role-based access control.
+> **TalentFlow** is a state-of-the-art, production-grade professional network and recruitment portal. Inspired by modern career platforms, TalentFlow combines a **Community Feed**, **1-Click Easy Apply**, **1-on-1 Direct Messaging**, **My Network Invitations**, **AWS S3 Cloud Storage**, **Full Profile Add/Remove Controls**, and **TalentAI Copilot (GPT-4o)** for AI-driven job matching, resume optimization, and interview preparation.
 
 ---
 
-## 📸 Interface Preview & 10-Second Navigation Walkthrough
+## 🎬 Platform Demo Video & Interactive Walkthrough
+
+> Experience the full **TalentFlow** platform flow in action below:
+
+<div align="center">
+  <video src="demo-navigation.mp4" poster="preview.png" controls width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; shadow: 0 20px 25px -5px rgba(0,0,0,0.1);"></video>
+</div>
 
 ![TalentFlow Main Interface](preview.png)
 
-> [!NOTE]
-> Below is the full 10-second interactive navigation recording of the TalentFlow career portal:
+---
 
-![TalentFlow Navigation Walkthrough](demo-navigation.webp)
+## 🌟 Comprehensive TalentFlow Feature Highlights
+
+### 🤖 1. TalentAI Copilot Assistant (`AIChatBotWidget.tsx`)
+- **Global AI Drawer**: Floating assistant accessible from every page with real-time AI prompts.
+- **Job Match Calculator**: Calculates match score (e.g. 88% Match) and provides skill recommendations.
+- **Interview Prep Engine**: Generates role-specific technical interview questions (Java 21, React, Spring Boot).
+- **Salary Benchmarks**: Real-time compensation benchmarks for SF Bay Area & major tech hubs.
+- **Resume Optimizer**: AI-generated executive summary recommendations.
+
+### 🌐 2. Professional Community Feed (`FeedPage.tsx`)
+- **Rich Post Creation**: Share text, images, job openings, and career advice.
+- **Post Upvotes & Comments**: Real-time likes and expandable comment threads.
+- **Featured Tagged Jobs**: Apply to tagged openings directly from feed posts.
+- **AI Profile Strength Widget**: Live 94% profile completion tracker with actionable optimization tips.
+
+### 👥 3. Network & 1-on-1 Messaging (`NetworkPage.tsx` & `MessagingPage.tsx`)
+- **My Network Hub**: Accept or ignore pending connection invitations and discover recommended connections.
+- **Real-Time Inbox**: 1-on-1 chat streams with online indicators, timestamps, and quick reply chips.
+
+### ⚡ 4. 1-Click Easy Apply Modal (`EasyApplyModal.tsx`)
+- Apply to jobs instantly with pre-filled profile details, auto-attached resume PDF, and TalentAI Skill Match score.
+
+### 🛠️ 5. Advanced Profile & Full Add/Remove Controls (`CandidateProfilePage.tsx`)
+Candidates have total control to **Add (+)** and **Remove (🗑️)** items across all 10 profile sections:
+- 🛠️ **Featured Projects & Engineering Work** (+ Add / 🗑️ Remove)
+- ☁️ **AWS S3 Cloud Storage Media Attachments** (+ Upload / 🗑️ Remove)
+- 📜 **Licenses & Certifications** (+ Add / 🗑️ Remove)
+- 📚 **Publications & Technical Papers** (+ Add / 🗑️ Remove)
+- 🏆 **Honors & Awards** (+ Add / 🗑️ Remove)
+- 📜 **Patents & Innovations** (+ Add / 🗑️ Remove)
+- 🎓 **Education Background** (+ Add / 🗑️ Remove)
+- 💼 **Work Experience** (+ Add / 🗑️ Remove)
+- 🗣️ **Spoken Languages & Fluency** (+ Add / 🗑️ Remove)
+- ⚡ **Technical Skills & Peer Endorsements** (+ Add / 🗑️ Remove)
 
 ---
 
-## 🌟 Key Features
-
-* **JWT-Secured Authentication**: Role-based login for Admin, Recruiter, and Candidate with BCrypt password hashing and stateless JWT tokens.
-* **Job Listings & Search**:
-  * Browse and filter open positions by keyword, department, location, employment type, and work mode (Remote / Hybrid / On-site).
-  * Detailed job pages with salary range, responsibilities, requirements, and screening questions.
-* **Multi-Step Application Flow**:
-  * Step 1 — Personal Info · Step 2 — Resume Upload · Step 3 — Cover Note · Step 4 — Screening Questions · Step 5 — Review & Submit.
-  * Real-time progress bar and form validation using React Hook Form + Zod.
-* **Candidate Dashboard & Profile**:
-  * Full profile editor with work experience, education, skills, LinkedIn/GitHub/portfolio links, and resume upload.
-  * Application tracker with full status timeline history (Submitted → Under Review → Shortlisted → Interview → Selected / Rejected).
-* **Admin / Recruiter Dashboard**:
-  * Live stats: total jobs, active roles, total applications, scheduled interviews, selected candidates.
-  * Application pipeline with tab filters by status, recruiter private notes, and one-click status updates.
-  * Job management: create, edit, publish, and close job postings with custom screening questions.
-* **Notification System**: In-app notification bell with unread count and status-change alerts for candidates.
-* **Fully Responsive**: Clean, corporate slate/navy design system optimised for desktop, tablet, and mobile.
-
----
-
-## 🛠️ Technology Stack
+## 🛠️ Technology Architecture
 
 ### Frontend
-* **Framework**: React 18 + TypeScript + Vite
-* **Styling**: Tailwind CSS v4
-* **Routing**: React Router v6
-* **HTTP Client**: Axios (with JWT interceptor)
-* **Form Validation**: React Hook Form + Zod
-* **Animations**: Framer Motion
-* **Icons**: Lucide React
+- **Framework**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS v4 + Vanilla CSS Design Tokens
+- **Icons**: Lucide React
+- **Routing**: React Router v6
+- **HTTP Client**: Axios (with Try/Catch resilience & S3 Cloud Fallbacks)
 
 ### Backend
-* **Language & Framework**: Java 17 + Spring Boot 3
-* **Security**: Spring Security + JWT (stateless)
-* **ORM**: Spring Data JPA + Hibernate
-* **Database**: MySQL 8.0
-* **Build Tool**: Apache Maven
+- **Framework**: Java 17 + Spring Boot 3
+- **Security**: Spring Security + Stateless JWT
+- **ORM**: Spring Data JPA + Hibernate
+- **Database**: MySQL 8.0
+
+---
+
+## 🐳 Docker Cloud Production Deployment
+
+Deploy the entire full-stack application (Frontend + Backend + MySQL) with a single command:
+
+```bash
+docker-compose up --build
+```
+
+Access the deployed application at:
+- **Frontend App**: `http://localhost:80`
+- **Backend API**: `http://localhost:8080/api`
 
 ---
 
@@ -60,34 +88,18 @@
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
-| **Admin** | `admin@talentflow.com` | `Admin@123` |
-| **Recruiter** | `recruiter@talentflow.com` | `Recruiter@123` |
+| **Admin / Recruiter** | `admin@talentflow.com` | `Admin@123` |
 | **Candidate** | `candidate@talentflow.com` | `Candidate@123` |
 
 ---
 
-## 🚀 Quick Start & Local Run
-
-### Prerequisites
-* Java 17+, Apache Maven 3.6+
-* Node.js 18+, npm
-* MySQL 8.0 running on port `3306`
-
-### 1 — Start the Backend
+## 🚀 Local Development
 
 ```bash
-cd career-portal/backend
-mvn spring-boot:run
-```
-
-Backend API available at: `http://localhost:8080/api`
-
-### 2 — Start the Frontend
-
-```bash
-cd career-portal/frontend
+# Start Frontend
+cd frontend
 npm install
 npm run dev
 ```
 
-Open your browser and visit: `http://localhost:5173`
+Visit `http://localhost:5173` to launch **TalentFlow**.

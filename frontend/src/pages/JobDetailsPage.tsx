@@ -38,7 +38,7 @@ export const JobDetailsPage: React.FC = () => {
   const checkExistingApplication = async () => {
     try {
       const res = await applicationsApi.getMyApplications();
-      const match = res.data.find((app) => app.job.id === Number(id));
+      const match = res.data.find((app: JobApplication) => app.job.id === Number(id));
       if (match) {
         setExistingApplication(match);
       }

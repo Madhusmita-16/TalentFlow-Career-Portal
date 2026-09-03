@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { candidateApi } from '../api';
-import { Candidate, Education, WorkExperience } from '../types';
-import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Code, FileText, Upload, Plus, Trash2, CheckCircle2, Save, ExternalLink } from 'lucide-react';
+import { candidateApi, cloudStorageApi } from '../api';
+import { 
+  Candidate, Education, WorkExperience, Certification, 
+  ProjectExperience, Publication, HonorAward, Patent, LanguageProficiency, MediaAttachment 
+} from '../types';
+import { 
+  User, Phone, MapPin, Briefcase, GraduationCap, Code, FileText, Upload, Plus, Trash2, 
+  CheckCircle2, Save, ExternalLink, Sparkles, Award, ThumbsUp, FolderGit2, BookOpen, 
+  Trophy, Globe, FileCheck2, CloudUpload, Play 
+} from 'lucide-react';
 
 export const CandidateProfilePage: React.FC = () => {
   const [candidate, setCandidate] = useState<Candidate | null>(null);
@@ -10,17 +17,35 @@ export const CandidateProfilePage: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Form states
+  const [headline, setHeadline] = useState('');
   const [phone, setPhone] = useState('');
   const [location, setLocation] = useState('');
   const [summary, setSummary] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [portfolioUrl, setPortfolioUrl] = useState('');
+  const [openToWork, setOpenToWork] = useState(true);
 
+  // Lists
   const [educationList, setEducationList] = useState<Education[]>([]);
   const [workExperienceList, setWorkExperienceList] = useState<WorkExperience[]>([]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [projects, setProjects] = useState<ProjectExperience[]>([]);
+  const [publications, setPublications] = useState<Publication[]>([]);
+  const [awards, setAwards] = useState<HonorAward[]>([]);
+  const [patents, setPatents] = useState<Patent[]>([]);
+  const [languages, setLanguages] = useState<LanguageProficiency[]>([]);
+  const [mediaAttachments, setMediaAttachments] = useState<MediaAttachment[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [newSkillInput, setNewSkillInput] = useState('');
+
+  const [skillEndorsements, setSkillEndorsements] = useState<Record<string, number>>({
+    'Java 21': 14,
+    'Spring Boot': 19,
+    'React.js': 12,
+    'TypeScript': 9,
+    'MySQL': 7
+  });
 
   useEffect(() => {
     fetchProfile();
@@ -31,6 +56,7 @@ export const CandidateProfilePage: React.FC = () => {
       const res = await candidateApi.getProfile();
       const c = res.data;
       setCandidate(c);
+      setHeadline(c.headline || 'Senior Full-Stack Engineer at TechCorp Solutions | Java 21, React, Spring Boot');
       setPhone(c.phone || '');
       setLocation(c.location || '');
       setSummary(c.summary || '');
@@ -39,9 +65,17 @@ export const CandidateProfilePage: React.FC = () => {
       setPortfolioUrl(c.portfolioUrl || '');
       setEducationList(c.educationList || []);
       setWorkExperienceList(c.workExperienceList || []);
+      setCertifications(c.certifications || []);
+      setProjects(c.projects || []);
+      setPublications(c.publications || []);
+      setAwards(c.awards || []);
+      setPatents(c.patents || []);
+      setLanguages(c.languages || []);
+      setMediaAttachments(c.mediaAttachments || []);
       setSkills(c.skills || []);
+      setOpenToWork(c.openToWork ?? true);
     } catch (err) {
-      // Ignore
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -54,6 +88,7 @@ export const CandidateProfilePage: React.FC = () => {
 
     try {
       const updated = await candidateApi.updateProfile({
+        headline,
         phone,
         location,
         summary,
@@ -62,65 +97,129 @@ export const CandidateProfilePage: React.FC = () => {
         portfolioUrl,
         educationList,
         workExperienceList,
+        certifications,
+        projects,
+        publications,
+        awards,
+        patents,
+        languages,
+        mediaAttachments,
         skills,
+        openToWork
       });
 
       setCandidate(updated.data);
-      setSuccessMsg('Candidate profile updated successfully!');
-      setTimeout(() => setSuccessMsg(null), 4000);
+      setSuccessMsg('Profile changes saved successfully!');
+      setTimeout(() => setSuccessMsg(null), 3500);
     } catch (err) {
-      // Ignore
+      console.error(err);
     } finally {
       setIsSaving(false);
     }
   };
 
+  const handleEndorseSkill = (skillName: string) => {
+    setSkillEndorsements(prev => ({
+      ...prev,
+      [skillName]: (prev[skillName] || 0) + 1
+    }));
+  };
+
+  /* ================= ADD & REMOVE HANDLERS FOR ALL SECTIONS ================= */
+  
+  // 1. Education
   const handleAddEducation = () => {
-    setEducationList([
-      ...educationList,
-      { institution: '', degree: '', fieldOfStudy: '', startYear: 2020, endYear: 2024, grade: '' },
-    ]);
+    setEducationList(prev => [...prev, { institution: '', degree: '', fieldOfStudy: '', startYear: 2020, endYear: 2024, grade: '' }]);
+  };
+  const handleRemoveEducation = (idx: number) => {
+    setEducationList(prev => prev.filter((_, i) => i !== idx));
   };
 
-  const handleRemoveEducation = (index: number) => {
-    setEducationList(educationList.filter((_, i) => i !== index));
-  };
-
+  // 2. Experience
   const handleAddExperience = () => {
-    setWorkExperienceList([
-      ...workExperienceList,
-      { company: '', position: '', startDate: '', endDate: '', currentlyWorking: false, responsibilities: '' },
-    ]);
+    setWorkExperienceList(prev => [...prev, { company: '', position: '', startDate: '', endDate: '', currentlyWorking: false, responsibilities: '' }]);
+  };
+  const handleRemoveExperience = (idx: number) => {
+    setWorkExperienceList(prev => prev.filter((_, i) => i !== idx));
   };
 
-  const handleRemoveExperience = (index: number) => {
-    setWorkExperienceList(workExperienceList.filter((_, i) => i !== index));
+  // 3. Certifications
+  const handleAddCertification = () => {
+    setCertifications(prev => [...prev, { id: Date.now(), name: 'New Certification', issuingOrganization: 'Certification Issuer', issueDate: new Date().toISOString().split('T')[0], credentialId: `CERT-${Date.now().toString().slice(-6)}` }]);
+  };
+  const handleRemoveCertification = (idx: number) => {
+    setCertifications(prev => prev.filter((_, i) => i !== idx));
   };
 
+  // 4. Projects
+  const handleAddProject = () => {
+    setProjects(prev => [...prev, { id: Date.now(), title: 'New Cloud Project', role: 'Full-Stack Developer', description: 'Architected high-scale web application.', technologies: ['React', 'Java 21'], liveUrl: 'https://demo.com', githubUrl: 'https://github.com' }]);
+  };
+  const handleRemoveProject = (idx: number) => {
+    setProjects(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 5. Media Attachments
+  const handleRemoveMedia = (idx: number) => {
+    setMediaAttachments(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 6. Publications
+  const handleAddPublication = () => {
+    setPublications(prev => [...prev, { id: Date.now(), title: 'New Engineering Publication', publisher: 'IEEE / Tech Journal', publicationDate: new Date().toISOString().split('T')[0], paperUrl: 'https://doi.org', abstractText: 'Paper abstract summary...' }]);
+  };
+  const handleRemovePublication = (idx: number) => {
+    setPublications(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 7. Awards
+  const handleAddAward = () => {
+    setAwards(prev => [...prev, { id: Date.now(), title: 'Engineering Excellence Award', issuer: 'Tech Organization', issueDate: new Date().toISOString().split('T')[0], description: 'Awarded for outstanding system architecture.' }]);
+  };
+  const handleRemoveAward = (idx: number) => {
+    setAwards(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 8. Patents
+  const handleAddPatent = () => {
+    setPatents(prev => [...prev, { id: Date.now(), title: 'Distributed Cloud System Patent', patentNumber: `US${Date.now().toString().slice(-8)}B2`, issueDate: new Date().toISOString().split('T')[0] }]);
+  };
+  const handleRemovePatent = (idx: number) => {
+    setPatents(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 9. Languages
+  const handleAddLanguage = () => {
+    setLanguages(prev => [...prev, { id: Date.now(), language: 'New Language', proficiency: 'PROFESSIONAL' }]);
+  };
+  const handleRemoveLanguage = (idx: number) => {
+    setLanguages(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 10. Skills
   const handleAddSkill = () => {
     if (newSkillInput.trim() && !skills.includes(newSkillInput.trim())) {
-      setSkills([...skills, newSkillInput.trim()]);
+      setSkills(prev => [...prev, newSkillInput.trim()]);
       setNewSkillInput('');
     }
   };
-
   const handleRemoveSkill = (skillToRemove: string) => {
-    setSkills(skills.filter((s) => s !== skillToRemove));
+    setSkills(prev => prev.filter(s => s !== skillToRemove));
   };
 
-  const handleResumeFileUpload = async (file: File) => {
+  const handleCloudFileUpload = async (file: File) => {
     try {
-      const res = await candidateApi.uploadResume(file);
-      if (candidate) {
-        setCandidate({
-          ...candidate,
-          resumeFilename: res.data.filename,
-          resumeFilePath: res.data.filePath,
-        });
-      }
-      setSuccessMsg('Resume uploaded successfully!');
+      const res = await cloudStorageApi.uploadMedia(file);
+      const newMedia: MediaAttachment = {
+        id: Date.now(),
+        title: file.name,
+        mediaUrl: res.data.mediaUrl,
+        mediaType: file.type.includes('image') ? 'IMAGE' : file.type.includes('video') ? 'VIDEO' : 'DOCUMENT'
+      };
+      setMediaAttachments(prev => [...prev, newMedia]);
+      setSuccessMsg(`Uploaded "${file.name}" to Cloud Storage!`);
     } catch (err) {
-      // Ignore
+      console.error(err);
     }
   };
 
@@ -133,57 +232,87 @@ export const CandidateProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Candidate Profile</h1>
-            <p className="text-xs text-slate-500 mt-1">Keep your professional experience, skills, and resume updated for recruiters.</p>
-          </div>
+    <div className="min-h-screen bg-slate-100 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        {/* Header Hero Banner */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div 
+            className="h-36 bg-cover bg-center"
+            style={{ backgroundImage: `url(${candidate?.bannerUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'})` }}
+          />
 
-          <button
-            onClick={handleSaveProfile}
-            disabled={isSaving}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition shadow-sm flex items-center gap-2"
-          >
-            <Save className="w-4 h-4" />
-            {isSaving ? 'Saving...' : 'Save Profile Changes'}
-          </button>
+          <div className="p-6 relative pt-0">
+            <div className="flex flex-wrap items-end justify-between gap-4 -mt-14 mb-4">
+              <div className="relative">
+                <img
+                  src={candidate?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
+                  alt="Avatar"
+                  className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
+                />
+                {openToWork && (
+                  <span className="absolute bottom-0 right-0 bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white shadow-xs">
+                    #OPEN TO WORK
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOpenToWork(!openToWork)}
+                  className={`px-4 py-2 text-xs font-bold rounded-xl transition border flex items-center gap-1.5 ${
+                    openToWork ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 text-slate-700 border-slate-300'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {openToWork ? 'Status: #OpenToWork (On)' : 'Set #OpenToWork'}
+                </button>
+
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-xs flex items-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  {isSaving ? 'Saving...' : 'Save Profile Changes'}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h1 className="text-2xl font-black text-slate-900">{candidate?.fullName || 'Alex Morgan'}</h1>
+              <p className="text-xs text-slate-600 font-semibold mt-0.5">{headline}</p>
+              <p className="text-xs text-slate-400 font-medium mt-1">{location || 'San Francisco, CA'} · 482 connections · Cloud Verified</p>
+            </div>
+          </div>
         </div>
 
         {successMsg && (
-          <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl flex items-center gap-2">
+          <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>{successMsg}</span>
           </div>
         )}
 
-        <form onSubmit={handleSaveProfile} className="space-y-8">
-          {/* Personal & Contact Section */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-card space-y-6">
+        <form onSubmit={handleSaveProfile} className="space-y-6">
+
+          {/* 1. Personal & Contact Information */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
             <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <User className="w-4 h-4 text-blue-600" />
-              Personal & Contact Information
+              <User className="w-4 h-4 text-sky-600" />
+              Personal & Professional Headline
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Full Name</label>
+              <div className="sm:col-span-2">
+                <label className="block font-bold text-slate-700 mb-1">Professional Title & Headline</label>
                 <input
                   type="text"
-                  disabled
-                  value={candidate?.fullName || ''}
-                  className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg font-medium text-slate-700 cursor-not-allowed"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Email Address</label>
-                <input
-                  type="email"
-                  disabled
-                  value={candidate?.email || ''}
-                  className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg font-medium text-slate-700 cursor-not-allowed"
+                  value={headline}
+                  onChange={(e) => setHeadline(e.target.value)}
+                  placeholder="Senior Full-Stack Engineer | Java 21, React, Spring Boot"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-medium outline-none focus:border-sky-600 focus:bg-white"
                 />
               </div>
 
@@ -194,7 +323,7 @@ export const CandidateProfilePage: React.FC = () => {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+1 (555) 000-0000"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-sky-600 focus:bg-white"
                 />
               </div>
 
@@ -205,115 +334,389 @@ export const CandidateProfilePage: React.FC = () => {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="San Francisco, CA"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-sky-600 focus:bg-white"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 text-xs mb-1">Professional Summary</label>
+              <label className="block font-semibold text-slate-700 text-xs mb-1">Professional Executive Summary</label>
               <textarea
                 rows={4}
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 placeholder="Senior Full Stack Software Engineer with 6+ years of experience..."
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 outline-none focus:border-blue-600 focus:bg-white"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">LinkedIn Profile</label>
-                <input
-                  type="url"
-                  value={linkedinUrl}
-                  onChange={(e) => setLinkedinUrl(e.target.value)}
-                  placeholder="https://linkedin.com/in/username"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-blue-600 focus:bg-white"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">GitHub Profile</label>
-                <input
-                  type="url"
-                  value={githubUrl}
-                  onChange={(e) => setGithubUrl(e.target.value)}
-                  placeholder="https://github.com/username"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-blue-600 focus:bg-white"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Portfolio / Website</label>
-                <input
-                  type="url"
-                  value={portfolioUrl}
-                  onChange={(e) => setPortfolioUrl(e.target.value)}
-                  placeholder="https://yourname.dev"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 outline-none focus:border-blue-600 focus:bg-white"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Resume Upload & PDF Section */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-card space-y-4">
-            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-blue-600" />
-              Resume Document
-            </h2>
-
-            {candidate?.resumeFilename ? (
-              <div className="p-4 bg-blue-50/60 border border-blue-200 rounded-xl flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <FileText className="w-6 h-6 text-blue-600 shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-slate-900">{candidate.resumeFilename}</div>
-                    <div className="text-[10px] text-slate-500">Active Resume File</div>
-                  </div>
-                </div>
-                <a
-                  href={`http://localhost:8080${candidate.resumeFilePath}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:text-slate-900 text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-sm"
-                >
-                  <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
-                  View PDF
-                </a>
-              </div>
-            ) : (
-              <p className="text-xs text-slate-400">No resume PDF uploaded yet.</p>
-            )}
-
-            <div className="pt-2">
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Upload New Resume (PDF / DOCX)</label>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleResumeFileUpload(e.target.files[0]);
-                  }
-                }}
-                className="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 outline-none focus:border-sky-600 focus:bg-white"
               />
             </div>
           </div>
 
-          {/* Education Entries */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-card space-y-6">
+          {/* 2. Projects & Engineering Portfolio */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <GraduationCap className="w-4 h-4 text-blue-600" />
-                Education Background
+                <FolderGit2 className="w-4 h-4 text-sky-600" />
+                Featured Projects & Engineering Work ({projects.length})
+              </h2>
+              <button
+                type="button"
+                onClick={handleAddProject}
+                className="px-3 py-1.5 bg-sky-50 text-sky-700 font-semibold text-xs rounded-xl hover:bg-sky-100 transition flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Project
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {projects.map((proj, idx) => (
+                <div key={proj.id || idx} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3 relative text-xs">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveProject(idx)}
+                    title="Remove Project"
+                    className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition p-1 hover:bg-rose-50 rounded-lg"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Project Title</label>
+                      <input
+                        type="text"
+                        value={proj.title}
+                        onChange={(e) => {
+                          const list = [...projects];
+                          list[idx].title = e.target.value;
+                          setProjects(list);
+                        }}
+                        placeholder="e.g. TalentFlow Cloud Gateway"
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900 font-medium"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Your Role</label>
+                      <input
+                        type="text"
+                        value={proj.role}
+                        onChange={(e) => {
+                          const list = [...projects];
+                          list[idx].role = e.target.value;
+                          setProjects(list);
+                        }}
+                        placeholder="e.g. Lead Architect"
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900 font-medium"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Live Demo URL</label>
+                      <input
+                        type="url"
+                        value={proj.liveUrl || ''}
+                        onChange={(e) => {
+                          const list = [...projects];
+                          list[idx].liveUrl = e.target.value;
+                          setProjects(list);
+                        }}
+                        placeholder="https://..."
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">GitHub Repo URL</label>
+                      <input
+                        type="url"
+                        value={proj.githubUrl || ''}
+                        onChange={(e) => {
+                          const list = [...projects];
+                          list[idx].githubUrl = e.target.value;
+                          setProjects(list);
+                        }}
+                        placeholder="https://github.com/..."
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-slate-700 mb-1">Description & Architecture Highlights</label>
+                    <textarea
+                      rows={2}
+                      value={proj.description}
+                      onChange={(e) => {
+                        const list = [...projects];
+                        list[idx].description = e.target.value;
+                        setProjects(list);
+                      }}
+                      placeholder="Key achievements and microservices architecture..."
+                      className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-900"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Featured Media & Cloud Storage Attachments */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <CloudUpload className="w-4 h-4 text-sky-600" />
+                Featured Portfolio Media & Cloud Attachments ({mediaAttachments.length})
+              </h2>
+              <label className="px-3.5 py-1.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-xs">
+                <Upload className="w-3.5 h-3.5" /> Upload File
+                <input
+                  type="file"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      handleCloudFileUpload(e.target.files[0]);
+                    }
+                  }}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {mediaAttachments.map((media, idx) => (
+                <div key={media.id || idx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between relative group">
+                  <div className="flex items-center gap-3">
+                    {media.mediaType === 'VIDEO' ? (
+                      <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                        <Play className="w-5 h-5" />
+                      </div>
+                    ) : (
+                      <img src={media.mediaUrl} alt={media.title} className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
+                    )}
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900">{media.title}</h4>
+                      <span className="text-[10px] text-slate-500 font-semibold">{media.mediaType} · Cloud Hosted</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <a
+                      href={media.mediaUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-1 text-slate-400 hover:text-sky-600 transition"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMedia(idx)}
+                      title="Remove Media"
+                      className="p-1 text-slate-400 hover:text-rose-600 transition"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 4. Certifications Section */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Award className="w-4 h-4 text-sky-600" />
+                Licenses & Certifications ({certifications.length})
+              </h2>
+              <button
+                type="button"
+                onClick={handleAddCertification}
+                className="px-3 py-1.5 bg-sky-50 text-sky-700 font-semibold text-xs rounded-xl hover:bg-sky-100 transition flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Certification
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {certifications.map((cert, idx) => (
+                <div key={cert.id || idx} className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between relative">
+                  <div className="flex items-center gap-3">
+                    <Award className="w-6 h-6 text-sky-600 shrink-0" />
+                    <div>
+                      <h4 className="font-bold text-slate-900 text-xs">{cert.name}</h4>
+                      <p className="text-[11px] text-slate-500">{cert.issuingOrganization} · Issued {cert.issueDate}</p>
+                      {cert.credentialId && (
+                        <span className="text-[10px] text-slate-400 font-mono">Credential ID: {cert.credentialId}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveCertification(idx)}
+                    title="Remove Certification"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 transition rounded-lg hover:bg-rose-50"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 5. Publications & Research Papers */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-sky-600" />
+                Publications & Technical Papers ({publications.length})
+              </h2>
+              <button
+                type="button"
+                onClick={handleAddPublication}
+                className="px-3 py-1.5 bg-sky-50 text-sky-700 font-semibold text-xs rounded-xl hover:bg-sky-100 transition flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Publication
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {publications.map((pub, idx) => (
+                <div key={pub.id || idx} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative text-xs">
+                  <button
+                    type="button"
+                    onClick={() => handleRemovePublication(idx)}
+                    title="Remove Publication"
+                    className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition p-1 hover:bg-rose-50 rounded-lg"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Paper Title</label>
+                      <input
+                        type="text"
+                        value={pub.title}
+                        onChange={(e) => {
+                          const list = [...publications];
+                          list[idx].title = e.target.value;
+                          setPublications(list);
+                        }}
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Journal / Publisher</label>
+                      <input
+                        type="text"
+                        value={pub.publisher}
+                        onChange={(e) => {
+                          const list = [...publications];
+                          list[idx].publisher = e.target.value;
+                          setPublications(list);
+                        }}
+                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 6. Honors, Awards & Patents */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            {/* Honors & Awards */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-amber-500" />
+                  Honors & Awards ({awards.length})
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleAddAward}
+                  className="px-2.5 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-lg hover:bg-amber-100 flex items-center gap-1"
+                >
+                  <Plus className="w-3 h-3" /> Add
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {awards.map((award, idx) => (
+                  <div key={award.id || idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1 relative">
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAward(idx)}
+                      title="Remove Award"
+                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 transition"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                    <div className="flex items-center justify-between pr-6">
+                      <span className="font-bold text-slate-900">{award.title}</span>
+                      <span className="text-[10px] text-slate-400">{award.issueDate}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500">{award.issuer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Patents */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <FileCheck2 className="w-4 h-4 text-sky-600" />
+                  Patents & Innovations ({patents.length})
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleAddPatent}
+                  className="px-2.5 py-1 bg-sky-50 text-sky-700 text-xs font-bold rounded-lg hover:bg-sky-100 flex items-center gap-1"
+                >
+                  <Plus className="w-3 h-3" /> Add
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {patents.map((pat, idx) => (
+                  <div key={pat.id || idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1 relative">
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePatent(idx)}
+                      title="Remove Patent"
+                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 transition"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                    <div className="flex items-center justify-between pr-6">
+                      <span className="font-bold text-slate-900">{pat.title}</span>
+                      <span className="text-[10px] text-slate-400">{pat.issueDate}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-sky-600 bg-sky-50 px-2 py-0.5 rounded">Patent: {pat.patentNumber}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          {/* 7. Education Entries */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-sky-600" />
+                Education Background ({educationList.length})
               </h2>
               <button
                 type="button"
                 onClick={handleAddEducation}
-                className="px-3 py-1.5 bg-blue-50 text-blue-700 font-semibold text-xs rounded-lg hover:bg-blue-100 transition flex items-center gap-1"
+                className="px-3 py-1.5 bg-sky-50 text-sky-700 font-semibold text-xs rounded-xl hover:bg-sky-100 transition flex items-center gap-1"
               >
-                <Plus className="w-3.5 h-3.5" />
-                Add Degree
+                <Plus className="w-3.5 h-3.5" /> Add Degree
               </button>
             </div>
 
@@ -323,7 +726,8 @@ export const CandidateProfilePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleRemoveEducation(idx)}
-                    className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition"
+                    title="Remove Degree"
+                    className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition p-1 hover:bg-rose-50 rounded-lg"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -357,68 +761,25 @@ export const CandidateProfilePage: React.FC = () => {
                         className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
                       />
                     </div>
-                    <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Field of Study</label>
-                      <input
-                        type="text"
-                        value={edu.fieldOfStudy || ''}
-                        onChange={(e) => {
-                          const list = [...educationList];
-                          list[idx].fieldOfStudy = e.target.value;
-                          setEducationList(list);
-                        }}
-                        placeholder="e.g. Computer Science"
-                        className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="block font-semibold text-slate-700 mb-1">Start Year</label>
-                        <input
-                          type="number"
-                          value={edu.startYear || 2020}
-                          onChange={(e) => {
-                            const list = [...educationList];
-                            list[idx].startYear = Number(e.target.value);
-                            setEducationList(list);
-                          }}
-                          className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-semibold text-slate-700 mb-1">End Year</label>
-                        <input
-                          type="number"
-                          value={edu.endYear || 2024}
-                          onChange={(e) => {
-                            const list = [...educationList];
-                            list[idx].endYear = Number(e.target.value);
-                            setEducationList(list);
-                          }}
-                          className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-900"
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Work Experience Entries */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-card space-y-6">
+          {/* 8. Work Experience Entries */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-blue-600" />
-                Work Experience
+                <Briefcase className="w-4 h-4 text-sky-600" />
+                Work Experience ({workExperienceList.length})
               </h2>
               <button
                 type="button"
                 onClick={handleAddExperience}
-                className="px-3 py-1.5 bg-blue-50 text-blue-700 font-semibold text-xs rounded-lg hover:bg-blue-100 transition flex items-center gap-1"
+                className="px-3 py-1.5 bg-sky-50 text-sky-700 font-semibold text-xs rounded-xl hover:bg-sky-100 transition flex items-center gap-1"
               >
-                <Plus className="w-3.5 h-3.5" />
-                Add Position
+                <Plus className="w-3.5 h-3.5" /> Add Position
               </button>
             </div>
 
@@ -428,7 +789,8 @@ export const CandidateProfilePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleRemoveExperience(idx)}
-                    className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition"
+                    title="Remove Position"
+                    className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition p-1 hover:bg-rose-50 rounded-lg"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -463,31 +825,54 @@ export const CandidateProfilePage: React.FC = () => {
                       />
                     </div>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Responsibilities & Achievements</label>
-                    <textarea
-                      rows={2}
-                      value={exp.responsibilities || ''}
-                      onChange={(e) => {
-                        const list = [...workExperienceList];
-                        list[idx].responsibilities = e.target.value;
-                        setWorkExperienceList(list);
-                      }}
-                      placeholder="Key achievements and technologies utilized..."
-                      className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-900"
-                    />
+          {/* 9. Spoken Languages & Fluency */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Globe className="w-4 h-4 text-sky-600" />
+                Languages & Spoken Fluency ({languages.length})
+              </h2>
+              <button
+                type="button"
+                onClick={handleAddLanguage}
+                className="px-3 py-1.5 bg-sky-50 text-sky-700 font-semibold text-xs rounded-xl hover:bg-sky-100 transition flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Language
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {languages.map((lang, idx) => (
+                <div key={lang.id || idx} className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-900">{lang.language}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-semibold text-sky-700 bg-sky-100 px-2.5 py-0.5 rounded-full">
+                      {lang.proficiency}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveLanguage(idx)}
+                      title="Remove Language"
+                      className="text-slate-400 hover:text-rose-600 transition"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Skills Tags */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-card space-y-4">
+          {/* 10. Skills & Peer Endorsements */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
             <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <Code className="w-4 h-4 text-blue-600" />
-              Technical & Core Skills
+              <Code className="w-4 h-4 text-sky-600" />
+              Technical & Core Skills ({skills.length})
             </h2>
 
             <div className="flex gap-2">
@@ -495,42 +880,51 @@ export const CandidateProfilePage: React.FC = () => {
                 type="text"
                 value={newSkillInput}
                 onChange={(e) => setNewSkillInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleAddSkill();
-                  }
-                }}
-                placeholder="e.g. React.js, Docker, Microservices..."
-                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-blue-600 text-slate-900"
+                placeholder="e.g. React.js, Docker, Spring Boot..."
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-600 text-slate-900"
               />
               <button
                 type="button"
                 onClick={handleAddSkill}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition"
+                className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-lg transition"
               >
                 Add Skill
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               {skills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold rounded-md"
-                >
-                  {skill}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveSkill(skill)}
-                    className="text-slate-400 hover:text-rose-600"
-                  >
-                    ×
-                  </button>
-                </span>
+                <div key={i} className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-xs text-slate-900 block">{skill}</span>
+                    <span className="text-[10px] text-slate-500">
+                      {skillEndorsements[skill] || 5} endorsements from peers
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleEndorseSkill(skill)}
+                      className="bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-600 text-slate-600 text-xs font-semibold px-2 py-1 rounded-lg flex items-center gap-1 transition"
+                    >
+                      <ThumbsUp className="w-3 h-3 text-sky-600" /> Endorse
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill)}
+                      title="Remove Skill"
+                      className="p-1 text-slate-400 hover:text-rose-600 transition"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
+
         </form>
       </div>
     </div>

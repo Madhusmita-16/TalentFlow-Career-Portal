@@ -6,6 +6,10 @@ export interface User {
   fullName: string;
   phone?: string;
   role: Role;
+  avatarUrl?: string;
+  headline?: string;
+  openToWork?: boolean;
+  hiringBadge?: boolean;
 }
 
 export interface AuthResponse {
@@ -51,6 +55,15 @@ export interface Job {
   updatedAt: string;
 }
 
+export interface Certification {
+  id: number;
+  name: string;
+  issuingOrganization: string;
+  issueDate: string;
+  credentialId?: string;
+  credentialUrl?: string;
+}
+
 export interface Education {
   id?: number;
   institution: string;
@@ -71,6 +84,55 @@ export interface WorkExperience {
   responsibilities?: string;
 }
 
+export interface ProjectExperience {
+  id: number;
+  title: string;
+  role: string;
+  description: string;
+  technologies: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface Publication {
+  id: number;
+  title: string;
+  publisher: string;
+  publicationDate: string;
+  paperUrl?: string;
+  abstractText?: string;
+}
+
+export interface HonorAward {
+  id: number;
+  title: string;
+  issuer: string;
+  issueDate: string;
+  description?: string;
+}
+
+export interface Patent {
+  id: number;
+  title: string;
+  patentNumber: string;
+  issueDate: string;
+}
+
+export interface LanguageProficiency {
+  id: number;
+  language: string;
+  proficiency: 'NATIVE' | 'PROFESSIONAL' | 'WORKING' | 'ELEMENTARY';
+}
+
+export interface MediaAttachment {
+  id: number;
+  title: string;
+  mediaUrl: string;
+  mediaType: 'IMAGE' | 'VIDEO' | 'SLIDES' | 'DOCUMENT';
+}
+
 export interface Candidate {
   id: number;
   userId: number;
@@ -78,7 +140,10 @@ export interface Candidate {
   email: string;
   phone?: string;
   location?: string;
+  headline?: string;
   summary?: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
   linkedinUrl?: string;
   githubUrl?: string;
   portfolioUrl?: string;
@@ -88,6 +153,16 @@ export interface Candidate {
   educationList: Education[];
   workExperienceList: WorkExperience[];
   skills: string[];
+  certifications?: Certification[];
+  projects?: ProjectExperience[];
+  publications?: Publication[];
+  awards?: HonorAward[];
+  patents?: Patent[];
+  languages?: LanguageProficiency[];
+  mediaAttachments?: MediaAttachment[];
+  openToWork?: boolean;
+  connectionsCount?: number;
+  profileViewsCount?: number;
 }
 
 export type ApplicationStatus = 'SUBMITTED' | 'UNDER_REVIEW' | 'SHORTLISTED' | 'INTERVIEW' | 'SELECTED' | 'REJECTED' | 'WITHDRAWN';
@@ -168,3 +243,81 @@ export interface AdminDashboardData {
   applicationsByDepartment: Record<string, number>;
   applicationStatusDistribution: Record<string, number>;
 }
+
+/* ==================== LINKEDIN SPECIFIC TYPES ==================== */
+
+export interface PostComment {
+  id: number;
+  authorName: string;
+  authorTitle: string;
+  authorAvatar: string;
+  content: string;
+  createdAt: string;
+  likes: number;
+}
+
+export interface Post {
+  id: number;
+  authorName: string;
+  authorTitle: string;
+  authorAvatar: string;
+  authorBadge?: 'OPEN_TO_WORK' | 'HIRING';
+  content: string;
+  imageUrl?: string;
+  taggedJobId?: number;
+  taggedJobTitle?: string;
+  hashtags: string[];
+  likesCount: number;
+  isLiked?: boolean;
+  commentsCount: number;
+  repostsCount: number;
+  comments: PostComment[];
+  createdAt: string;
+}
+
+export interface ConnectionRequest {
+  id: number;
+  senderId: number;
+  senderName: string;
+  senderTitle: string;
+  senderAvatar: string;
+  senderLocation?: string;
+  mutualConnections: number;
+  createdAt: string;
+}
+
+export interface NetworkUser {
+  id: number;
+  name: string;
+  headline: string;
+  location: string;
+  avatar: string;
+  company: string;
+  mutualConnections: number;
+  connectionLevel: '1st' | '2nd' | '3rd';
+  isConnected: boolean;
+  hasPendingRequest: boolean;
+}
+
+export interface ChatMessage {
+  id: number;
+  senderId: number;
+  senderName: string;
+  content: string;
+  timestamp: string;
+  isMine: boolean;
+}
+
+export interface Conversation {
+  id: number;
+  participantId: number;
+  participantName: string;
+  participantTitle: string;
+  participantAvatar: string;
+  onlineStatus: 'ONLINE' | 'OFFLINE' | 'AWAY';
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
+  messages: ChatMessage[];
+}
+

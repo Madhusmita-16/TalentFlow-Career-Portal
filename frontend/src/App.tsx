@@ -3,8 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { AIChatBotWidget } from './components/AIChatBotWidget';
 
 import { HomePage } from './pages/HomePage';
+import { FeedPage } from './pages/FeedPage';
+import { NetworkPage } from './pages/NetworkPage';
+import { MessagingPage } from './pages/MessagingPage';
 import { JobsPage } from './pages/JobsPage';
 import { JobDetailsPage } from './pages/JobDetailsPage';
 import { LoginPage } from './pages/LoginPage';
@@ -19,11 +23,15 @@ export const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans">
+        <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans relative">
           <Header />
           <main className="flex-grow">
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<FeedPage />} />
+              <Route path="/feed" element={<FeedPage />} />
+              <Route path="/network" element={<NetworkPage />} />
+              <Route path="/messaging" element={<MessagingPage />} />
+              <Route path="/explore" element={<HomePage />} />
               <Route path="/jobs" element={<JobsPage />} />
               <Route path="/jobs/:id" element={<JobDetailsPage />} />
               <Route path="/login" element={<LoginPage />} />
@@ -35,6 +43,7 @@ export const App: React.FC = () => {
               <Route path="/admin" element={<AdminDashboardPage />} />
             </Routes>
           </main>
+          <AIChatBotWidget />
           <Footer />
         </div>
       </Router>
@@ -43,3 +52,4 @@ export const App: React.FC = () => {
 };
 
 export default App;
+
