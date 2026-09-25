@@ -10,13 +10,27 @@ export const Footer: React.FC = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">
-                <Briefcase className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-xl bg-white p-1 shadow-xs flex items-center justify-center">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  <circle cx="68" cy="35" r="22" stroke="#0077FF" strokeWidth="9" fill="none" />
+                  <path
+                    d="M 28 65 C 20 65 18 50 28 40 C 35 32 45 42 55 52 L 72 32"
+                    stroke="#00A6FF"
+                    strokeWidth="9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle cx="28" cy="32" r="6" fill="#0077FF" />
+                  <path d="M 58 32 L 74 30 L 72 46" stroke="#0077FF" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
-              <span className="font-bold text-lg text-white">TalentFlow</span>
+              <div className="flex flex-col">
+                <span className="font-extrabold text-lg text-white leading-none">Link<span className="text-sky-400">2</span>Career</span>
+                <span className="text-[10px] text-slate-400 font-bold tracking-wider">Connect. Discover. Grow.</span>
+              </div>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed">
-              Empowering top talent to discover meaningful career opportunities at world-class enterprise technology organizations.
+              Your Professional Network & Career Platform — Empowering talent to connect, discover opportunities, and accelerate career growth.
             </p>
             <div className="flex space-x-3 pt-2">
               <a href="#" className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition">
@@ -73,7 +87,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 border-t border-slate-800 text-xs text-slate-500 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p>© {new Date().getFullYear()} TalentFlow Enterprise Recruitment Systems. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Link2Career — Your Professional Network & Career Platform. All rights reserved.</p>
           <div className="flex space-x-6">
             <a href="#" className="hover:text-slate-400 transition">Privacy</a>
             <a href="#" className="hover:text-slate-400 transition">Terms</a>

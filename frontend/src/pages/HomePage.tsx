@@ -43,16 +43,16 @@ export const HomePage: React.FC = () => {
               >
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-900/60 text-blue-300 border border-blue-700/50 mb-6">
                   <ShieldCheck className="w-3.5 h-3.5 mr-1.5" />
-                  Official Enterprise Recruitment & AI Portal
+                  Your Professional Network & Career Platform
                 </span>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-6">
-                  Build Your Career <br />
+                  Connect. Discover. Grow. <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-300">
-                    With TalentFlow
+                    With Link2Career
                   </span>
                 </h1>
                 <p className="text-lg sm:text-xl text-slate-300 mb-8 leading-relaxed font-normal">
-                  Discover meaningful opportunities, network with top engineers, optimize your resume with TalentAI Copilot, and take the next step in your professional journey.
+                  Discover meaningful career opportunities, network with top engineers and recruiters, optimize your resume with TalentAI Copilot, and accelerate your professional growth.
                 </p>
 
                 {/* Hero Quick Search Bar */}
@@ -129,8 +129,8 @@ export const HomePage: React.FC = () => {
         <section className="py-16 bg-white border-y border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-14">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Our Culture</span>
-              <h2 className="text-3xl font-bold text-slate-900 mt-1">Why Join TalentFlow?</h2>
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Connect. Discover. Grow.</span>
+              <h2 className="text-3xl font-bold text-slate-900 mt-1">Why Join Link2Career?</h2>
               <p className="text-slate-600 text-sm mt-3 leading-relaxed">
                 We believe in fostering an environment where innovation thrives, contributions are celebrated, and professional development is continuous.
               </p>
