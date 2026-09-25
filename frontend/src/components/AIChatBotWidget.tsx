@@ -1,5 +1,20 @@
-import React, { useState } from 'react';
-import { Sparkles, X, Send, Bot, User, CheckCircle2, Copy, RefreshCw, ChevronRight, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, X, Send, User, CheckCircle2, Copy, RefreshCw, ChevronRight, Zap } from 'lucide-react';
+
+export const AIRobotIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M12 2V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="12" cy="2" r="1.5" fill="#0284C7" />
+    <rect x="4" y="5" width="16" height="13" rx="4" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.1" />
+    <circle cx="9" cy="10.5" r="1.75" fill="#0284C7" />
+    <circle cx="15" cy="10.5" r="1.75" fill="#0284C7" />
+    <circle cx="9.5" cy="10" r="0.5" fill="#FFFFFF" />
+    <circle cx="15.5" cy="10" r="0.5" fill="#FFFFFF" />
+    <path d="M8.5 15H15.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <rect x="2" y="9" width="2" height="5" rx="1" fill="currentColor" />
+    <rect x="20" y="9" width="2" height="5" rx="1" fill="currentColor" />
+  </svg>
+);
 
 interface Message {
   id: number;
@@ -17,11 +32,22 @@ export const AIChatBotWidget: React.FC = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  useEffect(() => {
+    const handleOpenCopilot = () => {
+      setIsOpen(true);
+    };
+
+    window.addEventListener('open-ai-copilot', handleOpenCopilot);
+    return () => {
+      window.removeEventListener('open-ai-copilot', handleOpenCopilot);
+    };
+  }, []);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       sender: 'ai',
-      text: "👋 Hi! I'm **TalentFlow AI Copilot**, your personal career & recruitment assistant. How can I help you accelerate your job search today?",
+      text: "🤖 **Welcome to Link2Career AI Copilot!**\n\nI am your intelligent career, talent matching & interview preparation assistant. How can I assist you today?",
       timestamp: 'Just now'
     }
   ]);
@@ -46,7 +72,7 @@ export const AIChatBotWidget: React.FC = () => {
       const lower = textToSend.toLowerCase();
 
       if (lower.includes('match') || lower.includes('senior full-stack') || lower.includes('profile')) {
-        aiReply = "🎯 **TalentAI Profile Match Analysis**:\n\nYour profile is an **88% Match** for *Senior Full-Stack Engineer (Java & React)*!\n\n- ✅ **Matching Skills**: Java 21, Spring Boot, React.js, TypeScript, MySQL, Docker\n- 💡 **AI Recommendation**: Add *AWS Microservices & Kafka* to your profile skills to boost match score to 96%.";
+        aiReply = "🎯 **Link2Career AI Profile Match Analysis**:\n\nYour profile is an **88% Match** for *Senior Full-Stack Engineer (Java & React)*!\n\n- ✅ **Matching Skills**: Java 21, Spring Boot, React.js, TypeScript, MySQL, Docker\n- 💡 **AI Recommendation**: Add *AWS Microservices & Kafka* to your profile skills to boost match score to 96%.";
       } else if (lower.includes('interview') || lower.includes('prep') || lower.includes('questions')) {
         aiReply = "🧠 **Top 3 Technical Interview Questions for Java 21 & React**:\n\n1. *Java*: How do Virtual Threads in Java 21 improve high-concurrency throughput compared to traditional OS threads?\n2. *Spring*: Describe how you handle distributed transaction consistency across microservices.\n3. *React*: How do you optimize React component re-renders using `useMemo` and `useCallback`?";
       } else if (lower.includes('salary') || lower.includes('pay') || lower.includes('compensation')) {
@@ -54,7 +80,7 @@ export const AIChatBotWidget: React.FC = () => {
       } else if (lower.includes('resume') || lower.includes('summary') || lower.includes('improve')) {
         aiReply = "📝 **AI Suggested Resume Summary**:\n\n> *\"Results-driven Senior Full-Stack Engineer with 6+ years of expertise architecting high-throughput Spring Boot microservices and responsive React interfaces. Proven track record reducing API latency by 40% and scaling cloud SaaS applications to 500k+ active users.\"*";
       } else {
-        aiReply = `I understand you're asking about "${textToSend}". TalentFlow AI Copilot can help you optimize your profile, generate tailored cover notes, and match you with top engineering roles!`;
+        aiReply = `I understand you're asking about "${textToSend}". Link2Career AI Copilot can help you optimize your candidate profile, generate tailored cover notes, and match you with top tier engineering roles!`;
       }
 
       const aiMsg: Message = {
@@ -71,31 +97,36 @@ export const AIChatBotWidget: React.FC = () => {
 
   return (
     <>
-      {/* Floating Toggle Button */}
+      {/* Floating AI Robot Toggle Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white p-4 rounded-full shadow-2xl flex items-center gap-2 group transition-all duration-200 hover:scale-105"
+          title="Open Link2Career AI Copilot"
+          className="bg-gradient-to-r from-slate-900 via-sky-900 to-blue-900 hover:from-slate-800 hover:to-blue-800 text-white p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2.5 group transition-all duration-300 hover:scale-105 border border-sky-400/40 ring-4 ring-sky-500/20"
         >
-          <Sparkles className="w-6 h-6 text-yellow-300 animate-pulse" />
-          <span className="font-extrabold text-xs tracking-wider pr-1 hidden sm:inline">TalentAI Copilot</span>
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white"></span>
+          <div className="p-1 rounded-xl bg-sky-500/20 text-sky-400 group-hover:text-yellow-300 transition">
+            <AIRobotIcon className="w-6 h-6" />
+          </div>
+          <span className="font-extrabold text-xs tracking-wider pr-1 hidden sm:inline flex items-center gap-1.5">
+            AI Copilot
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          </span>
         </button>
       </div>
 
-      {/* Chat Drawer Popup */}
+      {/* AI Copilot Drawer Popup */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 z-50 w-full max-w-sm sm:max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[520px] animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-24 right-4 sm:right-6 z-50 w-full max-w-sm sm:max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[530px] animate-in fade-in slide-in-from-bottom-5 duration-200">
           
-          {/* Header */}
+          {/* Copilot Header */}
           <div className="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-2xl bg-sky-600/90 border border-sky-400 flex items-center justify-center text-yellow-300 shadow-xs">
-                <Bot className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-400/50 flex items-center justify-center text-sky-300 shadow-xs">
+                <AIRobotIcon className="w-6 h-6 text-sky-300" />
               </div>
               <div>
                 <h3 className="font-extrabold text-sm text-slate-100 flex items-center gap-1.5">
-                  TalentFlow AI Copilot
+                  Link2Career AI Copilot
                   <span className="bg-sky-500/30 text-sky-300 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-sky-400/40">
                     GPT-4o
                   </span>
@@ -141,15 +172,15 @@ export const AIChatBotWidget: React.FC = () => {
                 className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.sender === 'ai' && (
-                  <div className="w-7 h-7 rounded-xl bg-sky-600 text-white flex items-center justify-center text-xs shrink-0 mt-1">
-                    <Bot className="w-4 h-4" />
+                  <div className="w-7 h-7 rounded-xl bg-sky-900 text-sky-300 border border-sky-700/50 flex items-center justify-center text-xs shrink-0 mt-1">
+                    <AIRobotIcon className="w-4 h-4" />
                   </div>
                 )}
 
                 <div
                   className={`max-w-[82%] p-3.5 rounded-2xl text-xs space-y-1 shadow-2xs ${
                     msg.sender === 'user'
-                      ? 'bg-sky-600 text-white rounded-br-none'
+                      ? 'bg-sky-600 text-white rounded-br-none font-medium'
                       : 'bg-white border border-slate-200 text-slate-900 rounded-bl-none'
                   }`}
                 >
@@ -165,11 +196,11 @@ export const AIChatBotWidget: React.FC = () => {
 
             {isTyping && (
               <div className="flex gap-2 items-center text-xs text-slate-500 font-medium pt-1">
-                <div className="w-7 h-7 rounded-xl bg-sky-600 text-white flex items-center justify-center text-xs">
-                  <Bot className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-xl bg-sky-900 text-sky-300 flex items-center justify-center text-xs">
+                  <AIRobotIcon className="w-4 h-4" />
                 </div>
-                <span className="bg-white border border-slate-200 px-3 py-1.5 rounded-xl animate-pulse">
-                  AI is analyzing...
+                <span className="bg-white border border-slate-200 px-3 py-1.5 rounded-xl animate-pulse text-sky-700 font-semibold">
+                  AI Copilot is analyzing...
                 </span>
               </div>
             )}
@@ -187,7 +218,7 @@ export const AIChatBotWidget: React.FC = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask AI anything about your career..."
+              placeholder="Ask AI Copilot anything about your career..."
               className="flex-grow text-xs p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
             <button
@@ -204,3 +235,4 @@ export const AIChatBotWidget: React.FC = () => {
     </>
   );
 };
+
