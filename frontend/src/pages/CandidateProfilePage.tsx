@@ -9,12 +9,21 @@ import {
   CheckCircle2, Save, ExternalLink, Sparkles, Award, ThumbsUp, FolderGit2, BookOpen, 
   Trophy, Globe, FileCheck2, CloudUpload, Play 
 } from 'lucide-react';
+import { ProfileHeaderHero } from '../components/profile/ProfileHeaderHero';
+import { ProfileStrengthCard } from '../components/profile/ProfileStrengthCard';
+import { TalentAIInsightsCard } from '../components/profile/TalentAIInsightsCard';
+import { CareerPreferencesCard } from '../components/profile/CareerPreferencesCard';
+import { PublicProfileQRModal } from '../components/profile/PublicProfileQRModal';
+import { PublicProfileModal } from '../components/profile/PublicProfileModal';
 
 export const CandidateProfilePage: React.FC = () => {
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [isPublicProfileOpen, setIsPublicProfileOpen] = useState(false);
+
 
   // Form states
   const [headline, setHeadline] = useState('');
@@ -81,8 +90,10 @@ export const CandidateProfilePage: React.FC = () => {
     }
   };
 
-  const handleSaveProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveProfile = async (e?: React.FormEvent | React.MouseEvent) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
     setIsSaving(true);
     setSuccessMsg(null);
 
@@ -92,9 +103,14 @@ export const CandidateProfilePage: React.FC = () => {
         phone,
         location,
         summary,
+        avatarUrl: candidate?.avatarUrl,
+        bannerUrl: candidate?.bannerUrl,
         linkedinUrl,
         githubUrl,
         portfolioUrl,
+        resumeFilename: candidate?.resumeFilename,
+        resumeFilePath: candidate?.resumeFilePath,
+        resumeUploadedAt: candidate?.resumeUploadedAt,
         educationList,
         workExperienceList,
         certifications,
@@ -112,7 +128,7 @@ export const CandidateProfilePage: React.FC = () => {
       setSuccessMsg('Profile changes saved successfully!');
       setTimeout(() => setSuccessMsg(null), 3500);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to update profile:', err);
     } finally {
       setIsSaving(false);
     }
@@ -223,6 +239,70 @@ export const CandidateProfilePage: React.FC = () => {
     }
   };
 
+  const handleDirectResumeUpload = async (file: File) => {
+    try {
+      const res = await candidateApi.uploadResume(file);
+      setCandidate(prev => prev ? {
+        ...prev,
+        resumeFilename: res.data.filename,
+        resumeFilePath: res.data.filePath,
+        resumeUploadedAt: new Date().toISOString()
+      } : null);
+      setSuccessMsg(`Uploaded resume "${file.name}" successfully!`);
+      setTimeout(() => setSuccessMsg(null), 3500);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Profile Photo Upload / Edit / Delete Handlers
+  const handleUploadAvatar = async (file: File) => {
+    try {
+      const res = await cloudStorageApi.uploadMedia(file);
+      setCandidate(prev => prev ? { ...prev, avatarUrl: res.data.mediaUrl } : null);
+      setSuccessMsg('Profile picture updated successfully!');
+      setTimeout(() => setSuccessMsg(null), 3500);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEditAvatarUrl = (url: string) => {
+    setCandidate(prev => prev ? { ...prev, avatarUrl: url } : null);
+    setSuccessMsg('Profile picture URL updated!');
+    setTimeout(() => setSuccessMsg(null), 3500);
+  };
+
+  const handleDeleteAvatar = () => {
+    setCandidate(prev => prev ? { ...prev, avatarUrl: '' } : null);
+    setSuccessMsg('Profile picture removed.');
+    setTimeout(() => setSuccessMsg(null), 3500);
+  };
+
+  // Cover Banner Upload / Edit / Delete Handlers
+  const handleUploadBanner = async (file: File) => {
+    try {
+      const res = await cloudStorageApi.uploadMedia(file);
+      setCandidate(prev => prev ? { ...prev, bannerUrl: res.data.mediaUrl } : null);
+      setSuccessMsg('Cover banner photo updated successfully!');
+      setTimeout(() => setSuccessMsg(null), 3500);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEditBannerUrl = (url: string) => {
+    setCandidate(prev => prev ? { ...prev, bannerUrl: url } : null);
+    setSuccessMsg('Cover banner URL updated!');
+    setTimeout(() => setSuccessMsg(null), 3500);
+  };
+
+  const handleDeleteBanner = () => {
+    setCandidate(prev => prev ? { ...prev, bannerUrl: '' } : null);
+    setSuccessMsg('Cover banner photo removed.');
+    setTimeout(() => setSuccessMsg(null), 3500);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 py-16 flex items-center justify-center">
@@ -233,60 +313,27 @@ export const CandidateProfilePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 py-8">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        {/* Header Hero Banner */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div 
-            className="h-36 bg-cover bg-center"
-            style={{ backgroundImage: `url(${candidate?.bannerUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'})` }}
-          />
-
-          <div className="p-6 relative pt-0">
-            <div className="flex flex-wrap items-end justify-between gap-4 -mt-14 mb-4">
-              <div className="relative">
-                <img
-                  src={candidate?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
-                  alt="Avatar"
-                  className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
-                />
-                {openToWork && (
-                  <span className="absolute bottom-0 right-0 bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white shadow-xs">
-                    #OPEN TO WORK
-                  </span>
-                )}
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setOpenToWork(!openToWork)}
-                  className={`px-4 py-2 text-xs font-bold rounded-xl transition border flex items-center gap-1.5 ${
-                    openToWork ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 text-slate-700 border-slate-300'
-                  }`}
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {openToWork ? 'Status: #OpenToWork (On)' : 'Set #OpenToWork'}
-                </button>
-
-                <button
-                  onClick={handleSaveProfile}
-                  disabled={isSaving}
-                  className="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-xs flex items-center gap-2"
-                >
-                  <Save className="w-4 h-4" />
-                  {isSaving ? 'Saving...' : 'Save Profile Changes'}
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <h1 className="text-2xl font-black text-slate-900">{candidate?.fullName || 'Alex Morgan'}</h1>
-              <p className="text-xs text-slate-600 font-semibold mt-0.5">{headline}</p>
-              <p className="text-xs text-slate-400 font-medium mt-1">{location || 'San Francisco, CA'} · 482 connections · Cloud Verified</p>
-            </div>
-          </div>
-        </div>
+        {/* Profile Hero Header Component */}
+        <ProfileHeaderHero
+          candidate={candidate}
+          headline={headline}
+          location={location}
+          openToWork={openToWork}
+          onToggleOpenToWork={() => setOpenToWork(!openToWork)}
+          onSave={handleSaveProfile as any}
+          onOpenQR={() => setIsQRModalOpen(true)}
+          onOpenPublicProfile={() => setIsPublicProfileOpen(true)}
+          onUploadAvatar={handleUploadAvatar}
+          onEditAvatarUrl={handleEditAvatarUrl}
+          onDeleteAvatar={handleDeleteAvatar}
+          onUploadBanner={handleUploadBanner}
+          onEditBannerUrl={handleEditBannerUrl}
+          onDeleteBanner={handleDeleteBanner}
+          onUploadResume={handleDirectResumeUpload}
+          isSaving={isSaving}
+        />
 
         {successMsg && (
           <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl flex items-center gap-2">
@@ -295,7 +342,75 @@ export const CandidateProfilePage: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSaveProfile} className="space-y-6">
+        {/* Desktop 70/30 Responsive Layout Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* Main Content Column (~70% Width / 8 cols) */}
+          <form onSubmit={handleSaveProfile} className="lg:col-span-8 space-y-6">
+
+          {/* 📄 Dedicated Resume & Career Document Upload Section */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-sky-600" />
+                Resume & Career Document Upload
+              </h2>
+              <span className="text-xs text-slate-500 font-semibold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-200">
+                Direct File Upload
+              </span>
+            </div>
+
+            {/* Drag & Drop Upload Zone */}
+            <div className="border-2 border-dashed border-sky-200 hover:border-sky-500 rounded-2xl p-6 sm:p-8 text-center transition bg-sky-50/40 hover:bg-sky-50/80 group cursor-pointer relative">
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleDirectResumeUpload(e.target.files[0]);
+                  }
+                }}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+              />
+              <div className="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition shadow-sm">
+                <CloudUpload className="w-6 h-6" />
+              </div>
+              <h3 className="font-extrabold text-sm text-slate-900">Drag & Drop or Click to Upload Resume</h3>
+              <p className="text-xs text-slate-500 mt-1 font-medium">Supports PDF, DOC, DOCX files up to 10MB</p>
+              <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold shadow-xs transition">
+                <Upload className="w-4 h-4" /> Select Resume File
+              </div>
+            </div>
+
+            {/* Current Resume File Card */}
+            {candidate?.resumeFilename && (
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
+                    PDF
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                      {candidate.resumeFilename}
+                      <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Active Resume</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      Uploaded {candidate.resumeUploadedAt ? new Date(candidate.resumeUploadedAt).toLocaleDateString() : 'Recently'} · Parsed by TalentAI
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={candidate.resumeFilePath}
+                    download
+                    className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:text-sky-600 text-xs font-bold rounded-lg transition shadow-2xs"
+                  >
+                    Download
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* 1. Personal & Contact Information */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
@@ -925,8 +1040,34 @@ export const CandidateProfilePage: React.FC = () => {
             </div>
           </div>
 
-        </form>
+          </form>
+
+          {/* Right Sidebar Column (~30% Width / 4 cols) */}
+          <div className="lg:col-span-4 space-y-6">
+            <ProfileStrengthCard score={94} />
+            <TalentAIInsightsCard />
+            <CareerPreferencesCard />
+          </div>
+
+        </div>
       </div>
+
+      {/* Public Profile QR Modal */}
+      <PublicProfileQRModal
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+        username="madhusmita-mishra"
+      />
+
+      {/* Public Candidate Profile Preview Modal */}
+      <PublicProfileModal
+        isOpen={isPublicProfileOpen}
+        onClose={() => setIsPublicProfileOpen(false)}
+        candidate={candidate}
+        headline={headline}
+        location={location}
+      />
     </div>
   );
 };
+

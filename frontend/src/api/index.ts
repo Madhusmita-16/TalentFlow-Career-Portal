@@ -344,17 +344,30 @@ export const candidateApi = {
     catch { return mockResponse<Candidate>(MOCK_CANDIDATE); }
   },
   updateProfile: async (data: Partial<Candidate>) => {
-    try { return await api.put<Candidate>('/candidates/profile', data); }
-    catch { return mockResponse<Candidate>({ ...MOCK_CANDIDATE, ...data }); }
+    try {
+      const res = await api.put<Candidate>('/candidates/profile', data);
+      Object.assign(MOCK_CANDIDATE, res.data);
+      return res;
+    } catch {
+      Object.assign(MOCK_CANDIDATE, data);
+      return mockResponse<Candidate>({ ...MOCK_CANDIDATE, ...data });
+    }
   },
   uploadResume: async (file: File) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      return await api.post<{ message: string; filename: string; filePath: string }>('/candidates/resume', formData, {
+      const res = await api.post<{ message: string; filename: string; filePath: string }>('/candidates/resume', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      MOCK_CANDIDATE.resumeFilename = res.data.filename;
+      MOCK_CANDIDATE.resumeFilePath = res.data.filePath;
+      MOCK_CANDIDATE.resumeUploadedAt = new Date().toISOString();
+      return res;
     } catch {
+      MOCK_CANDIDATE.resumeFilename = file.name;
+      MOCK_CANDIDATE.resumeFilePath = `/uploads/${file.name}`;
+      MOCK_CANDIDATE.resumeUploadedAt = new Date().toISOString();
       return mockResponse({ message: 'Upload successful', filename: file.name, filePath: `/uploads/${file.name}` });
     }
   },
@@ -800,6 +813,40 @@ export const cloudStorageApi = {
     }
   }
 };
+
+/* MULTI-TENANT ORGANIZATIONS API MODULE */
+export const organizationApi = {
+  getOrganizations: async () => {
+    try { return await api.get('/organizations'); }
+    catch {
+      return mockResponse([
+        { id: 1, name: 'TalentFlow Enterprise', domain: 'talentflow.com', industry: 'HRTech / SaaS', location: 'San Francisco, CA' },
+        { id: 2, name: 'CloudPulse Systems', domain: 'cloudpulse.io', industry: 'Cloud Infrastructure', location: 'Seattle, WA' }
+      ]);
+    }
+  },
+  getOrganizationById: async (id: number) => {
+    try { return await api.get(`/organizations/${id}`); }
+    catch {
+      return mockResponse({ id, name: 'TalentFlow Enterprise', domain: 'talentflow.com', industry: 'HRTech / SaaS', location: 'San Francisco, CA' });
+    }
+  }
+};
+
+/* ENTERPRISE AUDIT TRAIL API MODULE */
+export const auditApi = {
+  getAuditLogs: async () => {
+    try { return await api.get('/audit/logs'); }
+    catch {
+      return mockResponse([
+        { id: 101, userEmail: 'admin@talentflow.com', action: 'CREATE_JOB', resource: 'Job #101', ipAddress: '192.168.1.45', result: 'SUCCESS', timestamp: '2026-09-25T14:30:00Z' },
+        { id: 102, userEmail: 'recruiter@talentflow.com', action: 'SHORTLIST_CANDIDATE', resource: 'Candidate #1', ipAddress: '192.168.1.88', result: 'SUCCESS', timestamp: '2026-09-25T15:10:00Z' },
+        { id: 103, userEmail: 'candidate@talentflow.com', action: 'SUBMIT_APPLICATION', resource: 'Application #1001', ipAddress: '192.168.1.12', result: 'SUCCESS', timestamp: '2026-09-25T16:00:00Z' }
+      ]);
+    }
+  }
+};
+
 
 
 
