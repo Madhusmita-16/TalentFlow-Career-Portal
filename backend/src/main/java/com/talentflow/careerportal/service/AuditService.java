@@ -1,36 +1,54 @@
 package com.talentflow.careerportal.service;
 
+import com.talentflow.careerportal.dto.PagedResponse;
 import com.talentflow.careerportal.entity.AuditLog;
-import com.talentflow.careerportal.repository.AuditLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-@Service
-public class AuditService {
+/**
+ * Service interface for enterprise compliance audit logging, event tracking,
+ * security monitoring, and administrator access history.
+ */
+public interface AuditService {
 
-    private final AuditLogRepository auditLogRepository;
+    /**
+     * Logs a platform security or operational event.
+     *
+     * @param userId Associated User ID (or null for anonymous system events).
+     * @param eventType Category string (e.g., USER_LOGIN_SUCCESS, APPLICATION_SUBMITTED).
+     * @param description Detailed event message.
+     * @param module Originating service or module name.
+     */
+    void logEvent(Long userId, String eventType, String description, String module);
 
-    @Autowired
-    public AuditService(AuditLogRepository auditLogRepository) {
-        this.auditLogRepository = auditLogRepository;
-    }
+    /**
+     * Logs a detailed event with IP address and user agent metadata.
+     *
+     * @param userId Associated User ID.
+     * @param eventType Category string.
+     * @param description Detailed event message.
+     * @param module Originating service/module.
+     * @param ipAddress Client IP address.
+     * @param userAgent Client browser/device User-Agent string.
+     */
+    void logEventWithContext(Long userId, String eventType, String description, String module, String ipAddress, String userAgent);
 
-    @Transactional
-    public AuditLog logEvent(String userEmail, String action, String resource, String ipAddress, String result) {
-        AuditLog auditLog = new AuditLog(userEmail, action, resource, ipAddress, result);
-        return auditLogRepository.save(auditLog);
-    }
+    /**
+     * Retrieves paged compliance audit logs.
+     *
+     * @param page Page index.
+     * @param size Page size.
+     * @return PagedResponse of AuditLog entities.
+     */
+    PagedResponse<AuditLog> getAuditLogs(int page, int size);
 
-    @Transactional(readOnly = true)
-    public List<AuditLog> getRecentAuditLogs() {
-        return auditLogRepository.findTop100ByOrderByTimestampDesc();
-    }
-
-    @Transactional(readOnly = true)
-    public List<AuditLog> getLogsByUser(String userEmail) {
-        return auditLogRepository.findByUserEmailOrderByTimestampDesc(userEmail);
-    }
+    /**
+     * Retrieves audit logs filtered by specific user ID.
+     *
+     * @param userId Target User ID.
+     * @param page Page index.
+     * @param size Page size.
+     * @return PagedResponse of AuditLog entities.
+     */
+    PagedResponse<AuditLog> getAuditLogsByUser(Long userId, int page, int size);
 }

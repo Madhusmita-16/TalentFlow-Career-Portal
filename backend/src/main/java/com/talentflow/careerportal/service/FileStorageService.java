@@ -1,49 +1,44 @@
 package com.talentflow.careerportal.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.UUID;
+/**
+ * Service interface for candidate resume uploads, profile photo attachments,
+ * cover banner images, and AWS S3 / local file storage management.
+ */
+public interface FileStorageService {
 
-@Service
-public class FileStorageService {
+    /**
+     * Stores a candidate resume document file and returns its public URL.
+     *
+     * @param file Multipart file payload.
+     * @param userId Associated candidate User ID.
+     * @return Public accessible file URL string.
+     */
+    String storeResumeFile(MultipartFile file, Long userId);
 
-    private final Path fileStorageLocation;
+    /**
+     * Stores a profile photo or avatar image file.
+     *
+     * @param file Image multipart file payload.
+     * @param userId Associated User ID.
+     * @return Public accessible image URL string.
+     */
+    String storeAvatarFile(MultipartFile file, Long userId);
 
-    public FileStorageService(@Value("${file.upload-dir:f:/Web Development/career-portal/backend/uploads}") String uploadDir) {
-        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
-        try {
-            Files.createDirectories(this.fileStorageLocation);
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not create upload directory", ex);
-        }
-    }
+    /**
+     * Stores a profile cover banner background image file.
+     *
+     * @param file Image multipart file.
+     * @param userId Associated User ID.
+     * @return Public accessible banner URL string.
+     */
+    String storeBannerFile(MultipartFile file, Long userId);
 
-    public String storeFile(MultipartFile file) {
-        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename() != null ? file.getOriginalFilename() : "resume.pdf");
-
-        try {
-            if (originalFileName.contains("..")) {
-                throw new RuntimeException("Filename contains invalid path sequence: " + originalFileName);
-            }
-
-            String fileExtension = "";
-            int i = originalFileName.lastIndexOf('.');
-            if (i > 0) {
-                fileExtension = originalFileName.substring(i);
-            }
-
-            String newFileName = UUID.randomUUID().toString() + fileExtension;
-            Path targetLocation = this.fileStorageLocation.resolve(newFileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-            return "/uploads/" + newFileName;
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not store file " + originalFileName + ". Please try again!", ex);
-        }
-    }
+    /**
+     * Deletes a stored file from cloud or local storage.
+     *
+     * @param fileUrl Public file URL string.
+     */
+    void deleteFile(String fileUrl);
 }
