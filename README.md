@@ -1,125 +1,142 @@
-# 💼 Link2Career — Your Professional Network & Career Platform
+# 💼 Link2Career — Enterprise Candidate & Recruitment SaaS Platform
 
-> **Link2Career** (*"Connect. Discover. Grow."*) is a modern, enterprise-grade Talent Acquisition, Applicant Tracking (ATS), Talent CRM, Professional Networking, and Career Management SaaS platform. Built with **Java 17/21**, **Spring Boot 3**, **React 18**, **TypeScript**, **MySQL 8.0**, **Redis**, and **Cloud Storage**, Link2Career features a **Community Feed**, **1-Click Easy Apply**, **Real-Time STOMP Messaging**, **50/50 Split Auth Layout**, **Header Search with Persistent History**, **Candidate Profile 70/30 Grid**, **Direct Resume Drag & Drop Uploads**, **Profile Photo & Cover Photo Operations**, **Public Profile Preview**, and **Link2Career AI Copilot** with a custom AI Robot symbol.
-
----
-
-## 🏷️ Key Positioning & Technology Keywords
-
-`Link2Career` • `Java 17/21` • `Spring Boot 3` • `Spring Security` • `JWT` • `RBAC` • `JPA/Hibernate` • `REST APIs` • `WebSocket` • `React` • `TypeScript` • `MySQL` • `Redis` • `Cloud Storage` • `Docker` • `AI Copilot` • `ATS` • `Talent CRM` • `Multi-Tenant SaaS` • `CI/CD`
+> **Link2Career** (*"Connect. Discover. Grow."*) is a functional, multi-tenant Talent Acquisition, Applicant Tracking (ATS), Talent CRM, Professional Networking, and Career Management SaaS platform. Built with **Java 17/21**, **Spring Boot 3**, **React 18**, **TypeScript**, **MySQL 8.0**, **Redis**, and **Cloud Storage**.
 
 ---
 
-## ✨ Primary Features & Capabilities
+## 🎬 Navigation Video Walkthrough
 
-### ⚡ 1. Brand Identity & Half-and-Half Auth Layout
-- **Brand Logo**: Custom hexagonal node network logo symbolizing professional connections and career growth trajectory.
-- **50/50 Split Authentication**: `LoginPage.tsx` and `RegisterPage.tsx` built with a dark navy branding panel on the left and clean white interactive login form on the right.
-- **Search Engine Title Tag**: `<title>Link2Career</title>` strictly configured for optimal SEO indexing.
+> Below is the recorded browser video demonstrating full navigation across all platform routes and interactive features:
 
-### 🔍 2. Header Search Bar with Persistent Search History
-- **White Navigation Bar**: Modern `bg-white border-b border-slate-200` sticky header layout.
-- **Search History Dropdown**: Saves recent search queries to `localStorage` with clear history actions and instant re-search triggers.
-
-### 🤖 3. Link2Career AI Copilot (`AIRobotIcon`)
-- **AI Robot Symbol**: Custom SVG AI Robot icon with antenna glow and eye reflections.
-- **Event-Driven Opening**: Dispatches `open-ai-copilot` event upon clicking the AI Robot symbol across the app or floating button.
-- **Career Capabilities**: Profile compatibility scoring (e.g. 88% Match), AI resume summary generator, technical interview prep questions, and salary insights.
-
-### 👤 4. Candidate Profile System (70/30 Grid Layout)
-- **70/30 Desktop Layout**: 70% primary column for profile details and 30% right sidebar for Profile Strength (94%), TalentAI Insights, and Career Preferences.
-- **Photo & Banner Controls**:
-  - 📷 **Profile Photo**: Upload new image, Edit photo URL, Delete/Remove photo.
-  - 🖼️ **Cover Banner**: Change banner image, Edit cover URL, Reset to default banner.
-- **📄 Resume Drag & Drop Upload Section**: Direct file upload zone supporting PDF, DOC, DOCX up to 10MB with live status card and download actions.
-- **👁️ View Public Profile Modal**: Recruiter-facing public view layout preview displaying candidate credentials, project cards, and verified badges.
-- **10 Profile Sections with Add (+)/Remove (🗑️) Controls**:
-  1. Personal & Contact Information
-  2. Featured Projects & Engineering Work
-  3. Portfolio Media & Cloud Attachments
-  4. Licenses & Certifications
-  5. Publications & Papers
-  6. Honors & Awards
-  7. Patents & Innovations
-  8. Education History
-  9. Work Experience
-  10. Skills & Peer Endorsements
+<div align="center">
+  <img src="demo-navigation.webp" alt="Link2Career Complete Platform Navigation Video Walkthrough" width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);" />
+  <p align="center" style="margin-top: 10px;">
+    🎥 <strong>Playback File Link</strong>: <a href="demo-navigation.webp">Open / Play demo-navigation.webp</a>
+  </p>
+</div>
 
 ---
 
-## 🏛️ System Architecture Blueprint
+## 🛠️ Functional Features in Active Use
+
+Below is the breakdown of functional components, API endpoints, state managers, and data models currently active in the codebase:
+
+### 1. 🔍 Header Navigation & Persistent Search Engine
+- **Active Component**: `Header.tsx`
+- **Functional Logic**:
+  - Global query filtering across jobs, candidates, and technical skills.
+  - **Search History Engine**: Persists recent search queries in `localStorage` under `link2career_search_history`.
+  - **History Controls**: Dropdown displaying recent searches with one-click re-execution and `Clear History` deletion.
+
+### 2. 🤖 Link2Career AI Copilot (`AIRobotIcon`)
+- **Active Components**: `AIChatBotWidget.tsx`, `AIRobotIcon`
+- **Functional Logic**:
+  - **Event-Driven Trigger**: Listens for global `open-ai-copilot` custom events dispatched from header buttons or floating action triggers.
+  - **Profile Match Score Vector**: Algorithmic match analysis comparing candidate skill matrices against job requirements.
+  - **Technical Interview Generator**: Produces tailored technical interview questions based on Java 21, Spring Boot, and React.
+  - **Salary Benchmarking**: Generates compensation breakdowns for target job titles and regions.
+
+### 3. 👤 Candidate Profile & File Upload Management
+- **Active Components**: `CandidateProfilePage.tsx`, `ProfileHeaderHero.tsx`
+- **Functional Logic**:
+  - **📄 Resume Drag & Drop Upload Zone**: Uses `candidateApi.uploadResume` to handle PDF/DOCX file uploads, displaying file size, upload timestamp, active status badge, and PDF download actions.
+  - **📷 Profile Photo Operations**:
+    - **Upload**: Direct image file upload via `cloudStorageApi.uploadMedia`.
+    - **Edit**: Direct URL modification.
+    - **Delete**: Resets profile photo to default avatar.
+  - **🖼️ Cover Photo Operations**:
+    - **Upload**: Direct banner image file upload via `cloudStorageApi.uploadMedia`.
+    - **Edit**: Direct URL modification.
+    - **Delete**: Resets cover photo to default enterprise gradient banner.
+  - **10 Profile Data Sections (with Add `+` and Remove `🗑️` State Handlers)**:
+    1. Personal & Contact Information
+    2. Featured Projects & Engineering Work
+    3. Portfolio Media & Cloud Attachments
+    4. Licenses & Certifications
+    5. Publications & Papers
+    6. Honors & Awards
+    7. Patents & Innovations
+    8. Education History
+    9. Work History
+    10. Technical Skills & Peer Endorsements
+
+### 4. 👁️ Public Profile Preview Modal
+- **Active Component**: `PublicProfileModal.tsx`
+- **Functional Logic**:
+  - Recruiter-facing public view modal previewing verified candidate identity, skills, verified badges (`#IdentityVerified`, `#SkillsVerified`), project cards, and direct PDF resume downloads.
+
+### 5. ⚡ 1-Click Easy Apply & Multi-Step Application Flow
+- **Active Component**: `ApplicationFlowPage.tsx`
+- **Functional Logic**:
+  - **5-Step Application Wizard**:
+    1. Personal Details Verification
+    2. Resume Attachment / Saved Resume Picker
+    3. Work History & Education Review
+    4. Custom Screening Questions (Text, Yes/No, Single Choice)
+    5. Review & Legal Confirmation Checkbox
+  - Produces unique application records (`#APP-1001`) logged in recruiter pipelines.
+
+### 6. 🛡️ Enterprise Audit Trail & Organization Management
+- **Active Backend Services**: `AuditController.java`, `AuditService.java`, `OrganizationController.java`
+- **Active Data Entities**: `AuditLog.java`, `Organization.java`, `OrganizationMember.java`
+- **Functional Logic**:
+  - Tracks user activity (action type, target entity, IP address, timestamp).
+  - Multi-tenant organization boundaries and member role assignments (`ADMIN`, `RECRUITER`, `MEMBER`).
+
+### 7. 💬 Real-Time STOMP WebSockets Messaging & Community Network
+- **Active Components**: `MessagingPage.tsx`, `FeedPage.tsx`, `NetworkPage.tsx`
+- **Functional Logic**:
+  - 1-on-1 direct messaging via STOMP WebSockets with unread indicators and presence tracking.
+  - Community feed post creation, likes, comments, and hashtag filters.
+  - Connection request dispatching (`ACCEPT`, `IGNORE`) and peer skill endorsements.
+
+---
+
+## 🏛️ Codebase Structure & Data Flow
 
 ```
-                       LINK2CAREER PLATFORM
-                                │
-                       React 18 + TypeScript
-                                │
-                       White Navigation Header
-                                │
-                       REST API / WebSocket
-                                │
-                      Spring Boot 3 Backend
-                                │
-        ┌───────────────────────┼───────────────────────┐
-        │                       │                       │
-    Security                Business Logic           AI Layer
-        │                       │                       │
-    JWT/RBAC                Services               AI Copilot
-        │                       │                       │
-        └───────────────────────┼───────────────────────┘
-                                │
-                         JPA / Hibernate
-                                │
-                             MySQL 8
-                                │
-               ┌────────────────┼────────────────┐
-               │                │                │
-          Cloud Storage       Redis       Search History
-               │                │                │
-            Documents         Cache         localStorage
+f:\works\TalentFlow-Career-Portal
+├── backend/
+│   └── src/main/java/com/talentflow/careerportal/
+│       ├── controller/        # REST Endpoints (Audit, Organization, Candidate, Job, Application)
+│       ├── entity/            # JPA Entities (AuditLog, Organization, Candidate, JobApplication)
+│       ├── repository/        # Spring Data Repositories
+│       └── service/           # Business Logic & Audit Trail Services
+└── frontend/
+    └── src/
+        ├── api/               # Axios REST Clients & API Mock Fallbacks
+        ├── components/        # Functional UI Components
+        │   ├── Header.tsx     # White Navbar + Persistent Search History
+        │   ├── Footer.tsx     # Footer Brand Links
+        │   ├── AIChatBotWidget.tsx # AI Copilot & AIRobotIcon
+        │   ├── Link2CareerLogo.tsx # Hexagonal Node Logo
+        │   └── profile/       # Profile Header Hero, Public Profile Modal, Insight Cards
+        └── pages/             # Route Pages (CandidateProfile, Jobs, Feed, Network, Messaging, Auth)
 ```
 
 ---
 
-## 🛠️ Technology Stack
-
-### Frontend
-- **Framework**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS + Custom Design Tokens
-- **Icons**: Lucide React + Custom SVG Icons (`Link2CareerLogo`, `AIRobotIcon`)
-- **Routing**: React Router v6
-
-### Backend
-- **Framework**: Java 17/21 + Spring Boot 3
-- **Security**: Spring Security 6 + Stateless JWT + RBAC
-- **Persistence**: Spring Data JPA + Hibernate + MySQL 8.0
-- **Documentation**: OpenAPI / Swagger UI (`/swagger-ui`)
-
----
-
-## 🚀 Local Development Setup
+## 🚀 Running the Project Locally
 
 ```bash
-# Frontend Setup
+# 1. Start Frontend (React + Vite)
 cd frontend
 npm install
 npm run dev
 
-# Backend Setup (in separate terminal)
+# 2. Start Backend (Java 17/21 + Spring Boot 3)
 cd backend
 ./mvnw spring-boot:run
 ```
 
-Visit `http://localhost:5173` to launch **Link2Career**.
+Access the frontend application at `http://localhost:5173`.
 
 ---
 
-## 📄 Platform Documentation Suite
+## 📄 Comprehensive Documentation
 
-- 📘 [Enterprise Platform Master Blueprint](docs/ENTERPRISE_PLATFORM_BLUEPRINT.md)
+- 📘 [Enterprise Platform Blueprint](docs/ENTERPRISE_PLATFORM_BLUEPRINT.md)
 - 👤 [Candidate Profile System Blueprint](docs/CANDIDATE_PROFILE_SYSTEM_BLUEPRINT.md)
 - 🎨 [Premium Professional Profile UI Spec](docs/PREMIUM_PROFESSIONAL_PROFILE_UI_SPEC.md)
 - 📋 [Product Requirements Document (PRD)](docs/PRD.md)
 - 🏗️ [Technical Architecture Specification](docs/ARCHITECTURE.md)
-- 🔐 [Security & RBAC Architecture](docs/SECURITY.md)
-- 🧪 [Testing & Verification Plan](docs/TEST_PLAN.md)
