@@ -1,160 +1,99 @@
-# 💼 TalentFlow — AI-Powered Enterprise Talent Acquisition & Career Management SaaS
+# 💼 Link2Career — Your Professional Network & Career Platform
 
-> **TalentFlow** is a production-oriented, multi-tenant talent acquisition, applicant tracking (ATS), Talent CRM, professional networking, and career management SaaS platform. Built with **Java 17/21**, **Spring Boot 3**, **React 18**, **TypeScript**, **MySQL 8.0**, **Redis**, and **AWS**, TalentFlow combines a **Community Feed**, **1-Click Easy Apply**, **Real-Time STOMP Messaging**, **Multi-Tenant Organization Workflows**, **AWS S3 Document Storage**, **Granular RBAC Security**, and **TalentAI Copilot (GPT-4o)** for AI-driven job matching, resume intelligence, and interview preparation.
-
----
-
-## 🏷️ Platform Architecture & Positioning Keywords
-
-`Java 17/21` • `Spring Boot 3` • `Spring Security` • `JWT` • `RBAC` • `JPA/Hibernate` • `REST APIs` • `WebSocket` • `React` • `TypeScript` • `MySQL` • `Redis` • `AWS S3` • `Docker` • `GitHub Actions` • `AI/LLM Integration` • `ATS` • `Talent CRM` • `Multi-Tenant SaaS` • `CI/CD` • `Observability`
+> **Link2Career** (*"Connect. Discover. Grow."*) is a modern, enterprise-grade Talent Acquisition, Applicant Tracking (ATS), Talent CRM, Professional Networking, and Career Management SaaS platform. Built with **Java 17/21**, **Spring Boot 3**, **React 18**, **TypeScript**, **MySQL 8.0**, **Redis**, and **Cloud Storage**, Link2Career features a **Community Feed**, **1-Click Easy Apply**, **Real-Time STOMP Messaging**, **50/50 Split Auth Layout**, **Header Search with Persistent History**, **Candidate Profile 70/30 Grid**, **Direct Resume Drag & Drop Uploads**, **Profile Photo & Cover Photo Operations**, **Public Profile Preview**, and **Link2Career AI Copilot** with a custom AI Robot symbol.
 
 ---
 
-## 🎬 Platform Navigation Demo Video Walkthrough
+## 🏷️ Key Positioning & Technology Keywords
 
-> Live automated 7-step browser video recording cycling through **all 7 platform navigation routes** (Feed, My Network, Jobs, Messaging, Applications, Candidate Profile, and Recruiter Portal):
-
-<div align="center">
-  <img src="demo-navigation.webp" alt="TalentFlow 7-Step Navigation Walkthrough Video" width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);" />
-  <p align="center" style="margin-top: 8px;">
-    🎥 <strong>Video File Link</strong>: <a href="demo-navigation.webp">Play / Open demo-navigation.webp</a>
-  </p>
-</div>
+`Link2Career` • `Java 17/21` • `Spring Boot 3` • `Spring Security` • `JWT` • `RBAC` • `JPA/Hibernate` • `REST APIs` • `WebSocket` • `React` • `TypeScript` • `MySQL` • `Redis` • `Cloud Storage` • `Docker` • `AI Copilot` • `ATS` • `Talent CRM` • `Multi-Tenant SaaS` • `CI/CD`
 
 ---
 
-## 📸 Captured Visual Results & Screenshots for All 7 Navigation Pages
+## ✨ Primary Features & Capabilities
 
-Below are the full visual results captured for every navigation page in **TalentFlow**:
+### ⚡ 1. Brand Identity & Half-and-Half Auth Layout
+- **Brand Logo**: Custom hexagonal node network logo symbolizing professional connections and career growth trajectory.
+- **50/50 Split Authentication**: `LoginPage.tsx` and `RegisterPage.tsx` built with a dark navy branding panel on the left and clean white interactive login form on the right.
+- **Search Engine Title Tag**: `<title>Link2Career</title>` strictly configured for optimal SEO indexing.
 
-### 1. 🌐 Community Feed (`/feed`)
-![1. Community Feed](screenshots/1_feed_page.png)
+### 🔍 2. Header Search Bar with Persistent Search History
+- **White Navigation Bar**: Modern `bg-white border-b border-slate-200` sticky header layout.
+- **Search History Dropdown**: Saves recent search queries to `localStorage` with clear history actions and instant re-search triggers.
 
-### 2. 👥 My Network (`/network`)
-![2. My Network](screenshots/2_network_page.png)
+### 🤖 3. Link2Career AI Copilot (`AIRobotIcon`)
+- **AI Robot Symbol**: Custom SVG AI Robot icon with antenna glow and eye reflections.
+- **Event-Driven Opening**: Dispatches `open-ai-copilot` event upon clicking the AI Robot symbol across the app or floating button.
+- **Career Capabilities**: Profile compatibility scoring (e.g. 88% Match), AI resume summary generator, technical interview prep questions, and salary insights.
 
-### 3. 💼 Jobs Board (`/jobs`)
-![3. Jobs Board](screenshots/3_jobs_page.png)
-
-### 4. 💬 Messaging Hub (`/messaging`)
-![4. Messaging Hub](screenshots/4_messaging_page.png)
-
-### 5. 📂 Applications Tracker (`/candidate/applications`)
-![5. Applications Tracker](screenshots/5_applications_page.png)
-
-### 6. 👤 Candidate Profile Showcase (`/candidate/profile`)
-![6. Candidate Profile Showcase](screenshots/6_profile_page.png)
-
-### 7. 🛡️ Recruiter Portal Dashboard (`/admin`)
-![7. Recruiter Portal Dashboard](screenshots/7_admin_page.png)
+### 👤 4. Candidate Profile System (70/30 Grid Layout)
+- **70/30 Desktop Layout**: 70% primary column for profile details and 30% right sidebar for Profile Strength (94%), TalentAI Insights, and Career Preferences.
+- **Photo & Banner Controls**:
+  - 📷 **Profile Photo**: Upload new image, Edit photo URL, Delete/Remove photo.
+  - 🖼️ **Cover Banner**: Change banner image, Edit cover URL, Reset to default banner.
+- **📄 Resume Drag & Drop Upload Section**: Direct file upload zone supporting PDF, DOC, DOCX up to 10MB with live status card and download actions.
+- **👁️ View Public Profile Modal**: Recruiter-facing public view layout preview displaying candidate credentials, project cards, and verified badges.
+- **10 Profile Sections with Add (+)/Remove (🗑️) Controls**:
+  1. Personal & Contact Information
+  2. Featured Projects & Engineering Work
+  3. Portfolio Media & Cloud Attachments
+  4. Licenses & Certifications
+  5. Publications & Papers
+  6. Honors & Awards
+  7. Patents & Innovations
+  8. Education History
+  9. Work Experience
+  10. Skills & Peer Endorsements
 
 ---
 
 ## 🏛️ System Architecture Blueprint
 
 ```
-                         TALENTFLOW
-                             │
-                    React + TypeScript
-                             │
-                     Nginx / CDN
-                             │
-                    REST API / WebSocket
-                             │
-                  Spring Boot Backend
-                             │
-       ┌─────────────────────┼─────────────────────┐
-       │                     │                     │
-   Security              Business Logic        AI Layer
-       │                     │                     │
-   JWT/RBAC              Services              AI APIs
-       │                     │                     │
-       └─────────────────────┼─────────────────────┘
-                             │
-                       JPA / Hibernate
-                             │
-                          MySQL
-                             │
-             ┌───────────────┼────────────────┐
-             │               │                │
-          AWS S3           Redis          Search Engine
-             │               │                │
-        Documents         Cache           Elasticsearch
+                       LINK2CAREER PLATFORM
+                                │
+                       React 18 + TypeScript
+                                │
+                       White Navigation Header
+                                │
+                       REST API / WebSocket
+                                │
+                      Spring Boot 3 Backend
+                                │
+        ┌───────────────────────┼───────────────────────┐
+        │                       │                       │
+    Security                Business Logic           AI Layer
+        │                       │                       │
+    JWT/RBAC                Services               AI Copilot
+        │                       │                       │
+        └───────────────────────┼───────────────────────┘
+                                │
+                         JPA / Hibernate
+                                │
+                             MySQL 8
+                                │
+               ┌────────────────┼────────────────┐
+               │                │                │
+          Cloud Storage       Redis       Search History
+               │                │                │
+            Documents         Cache         localStorage
 ```
 
 ---
 
-## 🌟 Complete Enterprise Platform Capabilities
-
-### 🏢 1. Multi-Tenant SaaS Architecture
-- **Tenant Data Isolation**: Enterprise organization boundaries (e.g. Google, Microsoft) where recruiters, hiring managers, interviewers, and jobs operate within isolated tenant scopes.
-- **Spring Security & Hibernate Integration**: Automatic tenant context filtering via Spring Security Context and JPA specifications.
-
-### 👥 2. Multi-Role Hierarchy & RBAC Security
-- **Roles**: Candidate, Recruiter, Hiring Manager, Interviewer, Organization Admin, Platform Admin.
-- **Granular Permissions**: `JOB_CREATE`, `JOB_UPDATE`, `JOB_DELETE`, `CANDIDATE_VIEW`, `APPLICATION_REVIEW`, `CANDIDATE_SHORTLIST`, `INTERVIEW_CREATE`, `ANALYTICS_VIEW`, `USER_MANAGE`.
-
-### 🤖 3. TalentAI Copilot Suite (`AIChatBotWidget.tsx`)
-- **Global AI Assistant**: Floating assistant accessible across all routes.
-- **Job Match Calculator**: Compatibility analysis vector comparing resume skills, keywords, and experience against job descriptions.
-- **AI Resume Analyzer & Parser**: PDF resume extraction, keyword optimization, and achievement impact scoring.
-- **AI Skill Gap Analyzer**: Pinpoints missing candidate skills and generates customized learning roadmaps.
-- **AI Interview Copilot & Mock Interview**: AI-generated technical questions and interactive interview practice.
-
-### 📊 4. Recruiter ATS & Talent CRM Engine
-- **Recruiter Pipeline Stages**: `NEW` ➔ `SCREENING` ➔ `SHORTLISTED` ➔ `INTERVIEW` ➔ `TECHNICAL` ➔ `HR` ➔ `OFFER` ➔ `HIRED`.
-- **Talent CRM Dossiers**: Internal recruiter notes, candidate tags (`#Java`, `#Senior`, `#ImmediateJoiner`), document attachments, and candidate interaction timelines.
-
-### 🌐 5. Professional Network & STOMP WebSockets Messaging
-- **Community Feed**: Share career posts, articles, job opportunities, image attachments, upvotes, and comments.
-- **My Network**: Manage connection invitations, company follows, and mutual connection indicators.
-- **Real-Time Messaging Hub**: WebSocket + STOMP protocol 1-on-1 messaging with live presence indicators and file sharing.
-
-### ⚡ 6. 1-Click Easy Apply & Advanced Profile Manager
-- **Easy Apply Modal**: Instant candidate applications with pre-filled profile data, target resume selection, and live AI compatibility scores.
-- **Advanced Profile Manager**: Complete Add (+)/Remove (🗑️) controls across Experience, Education, Skills, Projects, Certifications, Publications, Patents, Honors, Languages, and AWS S3 Media.
-
----
-
-## 🛠️ Technology Architecture
+## 🛠️ Technology Stack
 
 ### Frontend
 - **Framework**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS + Vanilla CSS Design Tokens
-- **State Management**: Redux Toolkit (Auth/UI State) + TanStack Query (Server State)
-- **Icons & UI**: Lucide React + Recharts
+- **Styling**: Tailwind CSS + Custom Design Tokens
+- **Icons**: Lucide React + Custom SVG Icons (`Link2CareerLogo`, `AIRobotIcon`)
 - **Routing**: React Router v6
 
 ### Backend
 - **Framework**: Java 17/21 + Spring Boot 3
-- **Security**: Spring Security 6 + Stateless JWT + BCrypt
-- **ORM & Database**: Spring Data JPA + Hibernate + MySQL 8.0
-- **Cache & Messaging**: Redis + WebSocket / STOMP
-- **Documentation**: Springdoc OpenAPI / Swagger UI (`/swagger-ui`)
-
----
-
-## 🐳 Docker Cloud Production Deployment
-
-Deploy the full-stack application (Frontend + Backend + MySQL + Redis) with a single command:
-
-```bash
-docker-compose up --build
-```
-
-Access the deployed application at:
-- **Frontend App**: `http://localhost:80`
-- **Backend API**: `http://localhost:8080/api`
-- **Swagger Documentation**: `http://localhost:8080/swagger-ui.html`
-
----
-
-## 🗃️ Seeded Test Accounts
-
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Admin / Recruiter** | `admin@talentflow.com` | `Admin@123` |
-| **Candidate** | `candidate@talentflow.com` | `Candidate@123` |
+- **Security**: Spring Security 6 + Stateless JWT + RBAC
+- **Persistence**: Spring Data JPA + Hibernate + MySQL 8.0
+- **Documentation**: OpenAPI / Swagger UI (`/swagger-ui`)
 
 ---
 
@@ -171,14 +110,16 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-Visit `http://localhost:5173` to launch **TalentFlow**.
+Visit `http://localhost:5173` to launch **Link2Career**.
 
 ---
 
-## 📄 Documentation Suite
+## 📄 Platform Documentation Suite
 
-- 📘 [Complete Enterprise Platform Blueprint](docs/ENTERPRISE_PLATFORM_BLUEPRINT.md)
-- 👤 [Complete Candidate Profile & Professional Identity System Blueprint](docs/CANDIDATE_PROFILE_SYSTEM_BLUEPRINT.md)
+- 📘 [Enterprise Platform Master Blueprint](docs/ENTERPRISE_PLATFORM_BLUEPRINT.md)
+- 👤 [Candidate Profile System Blueprint](docs/CANDIDATE_PROFILE_SYSTEM_BLUEPRINT.md)
+- 🎨 [Premium Professional Profile UI Spec](docs/PREMIUM_PROFESSIONAL_PROFILE_UI_SPEC.md)
 - 📋 [Product Requirements Document (PRD)](docs/PRD.md)
 - 🏗️ [Technical Architecture Specification](docs/ARCHITECTURE.md)
-
+- 🔐 [Security & RBAC Architecture](docs/SECURITY.md)
+- 🧪 [Testing & Verification Plan](docs/TEST_PLAN.md)
