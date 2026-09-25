@@ -8,10 +8,12 @@
 
 > Below is the recorded browser video demonstrating full navigation across all platform routes and interactive features:
 
+![Link2Career Platform Navigation Demo Video](./demo-navigation.webp)
+
 <div align="center">
-  <img src="demo-navigation.webp" alt="Link2Career Complete Platform Navigation Video Walkthrough" width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);" />
+  <img src="./demo-navigation.webp" alt="Link2Career Complete Platform Navigation Video Walkthrough" width="100%" style="border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);" />
   <p align="center" style="margin-top: 10px;">
-    🎥 <strong>Playback File Link</strong>: <a href="demo-navigation.webp">Open / Play demo-navigation.webp</a>
+    🎥 <strong>Playback File Link</strong>: <a href="./demo-navigation.webp">Open / Play demo-navigation.webp</a>
   </p>
 </div>
 
