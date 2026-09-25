@@ -1,6 +1,12 @@
-# 💼 TalentFlow — AI-Powered Enterprise Career & Talent Portal
+# 💼 TalentFlow — AI-Powered Enterprise Talent Acquisition & Career Management SaaS
 
-> **TalentFlow** is a state-of-the-art, production-grade professional network and recruitment portal. Inspired by modern career platforms, TalentFlow combines a **Community Feed**, **1-Click Easy Apply**, **1-on-1 Direct Messaging**, **My Network Invitations**, **AWS S3 Cloud Storage**, **Full Profile Add/Remove Controls**, and **TalentAI Copilot (GPT-4o)** for AI-driven job matching, resume optimization, and interview preparation.
+> **TalentFlow** is a production-oriented, multi-tenant talent acquisition, applicant tracking (ATS), Talent CRM, professional networking, and career management SaaS platform. Built with **Java 17/21**, **Spring Boot 3**, **React 18**, **TypeScript**, **MySQL 8.0**, **Redis**, and **AWS**, TalentFlow combines a **Community Feed**, **1-Click Easy Apply**, **Real-Time STOMP Messaging**, **Multi-Tenant Organization Workflows**, **AWS S3 Document Storage**, **Granular RBAC Security**, and **TalentAI Copilot (GPT-4o)** for AI-driven job matching, resume intelligence, and interview preparation.
+
+---
+
+## 🏷️ Platform Architecture & Positioning Keywords
+
+`Java 17/21` • `Spring Boot 3` • `Spring Security` • `JWT` • `RBAC` • `JPA/Hibernate` • `REST APIs` • `WebSocket` • `React` • `TypeScript` • `MySQL` • `Redis` • `AWS S3` • `Docker` • `GitHub Actions` • `AI/LLM Integration` • `ATS` • `Talent CRM` • `Multi-Tenant SaaS` • `CI/CD` • `Observability`
 
 ---
 
@@ -44,40 +50,69 @@ Below are the full visual results captured for every navigation page in **Talent
 
 ---
 
-## 🌟 Comprehensive TalentFlow Feature Highlights
+## 🏛️ System Architecture Blueprint
 
-### 🤖 1. TalentAI Copilot Assistant (`AIChatBotWidget.tsx`)
-- **Global AI Drawer**: Floating assistant accessible from every page with real-time AI prompts.
-- **Job Match Calculator**: Calculates match score (e.g. 88% Match) and provides skill recommendations.
-- **Interview Prep Engine**: Generates role-specific technical interview questions (Java 21, React, Spring Boot).
-- **Salary Benchmarks**: Real-time compensation benchmarks for SF Bay Area & major tech hubs.
-- **Resume Optimizer**: AI-generated executive summary recommendations.
+```
+                         TALENTFLOW
+                             │
+                    React + TypeScript
+                             │
+                     Nginx / CDN
+                             │
+                    REST API / WebSocket
+                             │
+                  Spring Boot Backend
+                             │
+       ┌─────────────────────┼─────────────────────┐
+       │                     │                     │
+   Security              Business Logic        AI Layer
+       │                     │                     │
+   JWT/RBAC              Services              AI APIs
+       │                     │                     │
+       └─────────────────────┼─────────────────────┘
+                             │
+                       JPA / Hibernate
+                             │
+                          MySQL
+                             │
+             ┌───────────────┼────────────────┐
+             │               │                │
+          AWS S3           Redis          Search Engine
+             │               │                │
+        Documents         Cache           Elasticsearch
+```
 
-### 🌐 2. Professional Community Feed (`FeedPage.tsx`)
-- **Rich Post Creation**: Share text, images, job openings, and career advice.
-- **Post Upvotes & Comments**: Real-time likes and expandable comment threads.
-- **Featured Tagged Jobs**: Apply to tagged openings directly from feed posts.
-- **AI Profile Strength Widget**: Live 94% profile completion tracker with actionable optimization tips.
+---
 
-### 👥 3. Network & 1-on-1 Messaging (`NetworkPage.tsx` & `MessagingPage.tsx`)
-- **My Network Hub**: Accept or ignore pending connection invitations and discover recommended connections.
-- **Real-Time Inbox**: 1-on-1 chat streams with online indicators, timestamps, and quick reply chips.
+## 🌟 Complete Enterprise Platform Capabilities
 
-### ⚡ 4. 1-Click Easy Apply Modal (`EasyApplyModal.tsx`)
-- Apply to jobs instantly with pre-filled profile details, auto-attached resume PDF, and TalentAI Skill Match score.
+### 🏢 1. Multi-Tenant SaaS Architecture
+- **Tenant Data Isolation**: Enterprise organization boundaries (e.g. Google, Microsoft) where recruiters, hiring managers, interviewers, and jobs operate within isolated tenant scopes.
+- **Spring Security & Hibernate Integration**: Automatic tenant context filtering via Spring Security Context and JPA specifications.
 
-### 🛠️ 5. Advanced Profile & Full Add/Remove Controls (`CandidateProfilePage.tsx`)
-Candidates have total control to **Add (+)** and **Remove (🗑️)** items across all 10 profile sections:
-- 🛠️ **Featured Projects & Engineering Work** (+ Add / 🗑️ Remove)
-- ☁️ **AWS S3 Cloud Storage Media Attachments** (+ Upload / 🗑️ Remove)
-- 📜 **Licenses & Certifications** (+ Add / 🗑️ Remove)
-- 📚 **Publications & Technical Papers** (+ Add / 🗑️ Remove)
-- 🏆 **Honors & Awards** (+ Add / 🗑️ Remove)
-- 📜 **Patents & Innovations** (+ Add / 🗑️ Remove)
-- 🎓 **Education Background** (+ Add / 🗑️ Remove)
-- 💼 **Work Experience** (+ Add / 🗑️ Remove)
-- 🗣️ **Spoken Languages & Fluency** (+ Add / 🗑️ Remove)
-- ⚡ **Technical Skills & Peer Endorsements** (+ Add / 🗑️ Remove)
+### 👥 2. Multi-Role Hierarchy & RBAC Security
+- **Roles**: Candidate, Recruiter, Hiring Manager, Interviewer, Organization Admin, Platform Admin.
+- **Granular Permissions**: `JOB_CREATE`, `JOB_UPDATE`, `JOB_DELETE`, `CANDIDATE_VIEW`, `APPLICATION_REVIEW`, `CANDIDATE_SHORTLIST`, `INTERVIEW_CREATE`, `ANALYTICS_VIEW`, `USER_MANAGE`.
+
+### 🤖 3. TalentAI Copilot Suite (`AIChatBotWidget.tsx`)
+- **Global AI Assistant**: Floating assistant accessible across all routes.
+- **Job Match Calculator**: Compatibility analysis vector comparing resume skills, keywords, and experience against job descriptions.
+- **AI Resume Analyzer & Parser**: PDF resume extraction, keyword optimization, and achievement impact scoring.
+- **AI Skill Gap Analyzer**: Pinpoints missing candidate skills and generates customized learning roadmaps.
+- **AI Interview Copilot & Mock Interview**: AI-generated technical questions and interactive interview practice.
+
+### 📊 4. Recruiter ATS & Talent CRM Engine
+- **Recruiter Pipeline Stages**: `NEW` ➔ `SCREENING` ➔ `SHORTLISTED` ➔ `INTERVIEW` ➔ `TECHNICAL` ➔ `HR` ➔ `OFFER` ➔ `HIRED`.
+- **Talent CRM Dossiers**: Internal recruiter notes, candidate tags (`#Java`, `#Senior`, `#ImmediateJoiner`), document attachments, and candidate interaction timelines.
+
+### 🌐 5. Professional Network & STOMP WebSockets Messaging
+- **Community Feed**: Share career posts, articles, job opportunities, image attachments, upvotes, and comments.
+- **My Network**: Manage connection invitations, company follows, and mutual connection indicators.
+- **Real-Time Messaging Hub**: WebSocket + STOMP protocol 1-on-1 messaging with live presence indicators and file sharing.
+
+### ⚡ 6. 1-Click Easy Apply & Advanced Profile Manager
+- **Easy Apply Modal**: Instant candidate applications with pre-filled profile data, target resume selection, and live AI compatibility scores.
+- **Advanced Profile Manager**: Complete Add (+)/Remove (🗑️) controls across Experience, Education, Skills, Projects, Certifications, Publications, Patents, Honors, Languages, and AWS S3 Media.
 
 ---
 
@@ -85,22 +120,23 @@ Candidates have total control to **Add (+)** and **Remove (🗑️)** items acro
 
 ### Frontend
 - **Framework**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS v4 + Vanilla CSS Design Tokens
-- **Icons**: Lucide React
+- **Styling**: Tailwind CSS + Vanilla CSS Design Tokens
+- **State Management**: Redux Toolkit (Auth/UI State) + TanStack Query (Server State)
+- **Icons & UI**: Lucide React + Recharts
 - **Routing**: React Router v6
-- **HTTP Client**: Axios (with Try/Catch resilience & S3 Cloud Fallbacks)
 
 ### Backend
-- **Framework**: Java 17 + Spring Boot 3
-- **Security**: Spring Security + Stateless JWT
-- **ORM**: Spring Data JPA + Hibernate
-- **Database**: MySQL 8.0
+- **Framework**: Java 17/21 + Spring Boot 3
+- **Security**: Spring Security 6 + Stateless JWT + BCrypt
+- **ORM & Database**: Spring Data JPA + Hibernate + MySQL 8.0
+- **Cache & Messaging**: Redis + WebSocket / STOMP
+- **Documentation**: Springdoc OpenAPI / Swagger UI (`/swagger-ui`)
 
 ---
 
 ## 🐳 Docker Cloud Production Deployment
 
-Deploy the entire full-stack application (Frontend + Backend + MySQL) with a single command:
+Deploy the full-stack application (Frontend + Backend + MySQL + Redis) with a single command:
 
 ```bash
 docker-compose up --build
@@ -109,6 +145,7 @@ docker-compose up --build
 Access the deployed application at:
 - **Frontend App**: `http://localhost:80`
 - **Backend API**: `http://localhost:8080/api`
+- **Swagger Documentation**: `http://localhost:8080/swagger-ui.html`
 
 ---
 
@@ -121,13 +158,27 @@ Access the deployed application at:
 
 ---
 
-## 🚀 Local Development
+## 🚀 Local Development Setup
 
 ```bash
-# Start Frontend
+# Frontend Setup
 cd frontend
 npm install
 npm run dev
+
+# Backend Setup (in separate terminal)
+cd backend
+./mvnw spring-boot:run
 ```
 
 Visit `http://localhost:5173` to launch **TalentFlow**.
+
+---
+
+## 📄 Documentation Suite
+
+- 📘 [Complete Enterprise Platform Blueprint](docs/ENTERPRISE_PLATFORM_BLUEPRINT.md)
+- 👤 [Complete Candidate Profile & Professional Identity System Blueprint](docs/CANDIDATE_PROFILE_SYSTEM_BLUEPRINT.md)
+- 📋 [Product Requirements Document (PRD)](docs/PRD.md)
+- 🏗️ [Technical Architecture Specification](docs/ARCHITECTURE.md)
+
